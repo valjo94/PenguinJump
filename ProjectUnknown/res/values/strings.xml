@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Project Unknown</string>
+
+    
+    <string name="landscape_view">This Application does not support landscape view. \n
+       							  Please rotate the device vertically.</string>
+    
+    <string name="main_title">Project Unknown</string>
+   
+    <string name="continue_label">Continue</string>
+    <string name="new_game_label">New Game</string>
+    <string name="high_score_label">High Score</string>
+    <string name="about_label">About</string>
+    <string name="exit_label">Exit</string>
+    			  
+    <string name="about_title">About Project Unknown</string>
+	<string name="about_text">
+		Project Unknown is an arcade game.Your purpose 
+		in the game is to get the best score that you can
+		by going through the game.Getting higher and higher,
+		the blocks start moving faster and more obsticles appear.
+		This is my first game so I hope that you like it. \n\n\n\n\n
+		
+		Copyright by Valentin Dimitrov (studied software engineering
+		 in TUES-Bulgaria.)
+	</string>
+    
+	<string name="new_game_title">Themes</string>
+	<string name="game_theme_1_label">Game Theme 1</string>
+	<string name="game_theme_2_label">Game Theme 2</string>
+	<string name="game_theme_3_label">Game Theme 3</string>
+
+</resources>
