@@ -2,6 +2,8 @@ package org.example.projectunknown.model.components;
 
 public class Velocity {
 
+	
+	//TODO PUSH INTO AN ENUM
 	public static final int DIRECTION_RIGHT	= 1;
 	public static final int DIRECTION_LEFT	= -1;
 	public static final int DIRECTION_UP	= -1;
@@ -66,4 +68,6 @@ public class Velocity {
 	public void toggleYDirection() {
 		yDirection = yDirection * -1;
 	}
+
+	    
 }

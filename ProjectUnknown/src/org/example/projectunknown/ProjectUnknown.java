@@ -104,6 +104,7 @@ public class ProjectUnknown extends Activity implements OnClickListener {
 		
 		setContentView(new MainGamePanel(this));
 		Log.d(TAG, "MainGamePanel");
+
 	}
 	
 	@Override

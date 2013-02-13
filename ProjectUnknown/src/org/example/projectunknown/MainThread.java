@@ -6,11 +6,42 @@ import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {
 
+	public long timeDiff;	
+	
 	private static final String TAG = MainThread.class.getSimpleName();
 	
 	// flag to hold game state
 	private boolean running;
- 
+	//	TODO
+	//	static final int GAME_READY = 0;
+	//	static final int GAME_RUNNING = 1;
+	//	static final int GAME_PAUSED = 2;
+	//	static final int GAME_LEVEL_END = 3;
+	//	static final int GAME_OVER = 4;
+	
+	//	public void update(float deltaTime) {
+	//		if(deltaTime > 0.1f)
+	//		deltaTime = 0.1f;
+	//		switch(state) {
+	//			case GAME_READY:
+	//				updateReady();
+	//			break;
+	//		case GAME_RUNNING:
+	//			updateRunning(deltaTime);
+	//			break;
+	//		case GAME_PAUSED:
+	//			updatePaused();
+	//			break;
+	//		case GAME_LEVEL_END:
+	//			updateLevelEnd();
+	//			break;
+	//		case GAME_OVER:
+	//			updateGameOver();
+	//			break;
+	//		}
+	//	}
+	
+	
 	private SurfaceHolder surfaceHolder;
 	private MainGamePanel gamePanel;
 
@@ -23,39 +54,8 @@ public class MainThread extends Thread {
 	}
  
 	 public void setRunning(boolean running) {
-	 
-		 this.running = running;
-	 
+		 this.running = running;	 
 	 }
-
-//	 @Override
-//	 public void run() {
-//		 
-//		 Canvas canvas;
-//		 Log.d(TAG, "Starting game loop");
-//		 
-//		while (running) {
-//			canvas = null;
-//			// try locking the canvas for exclusive pixel editing on the surface
-//			try {				
-//				canvas = this.surfaceHolder.lockCanvas();
-//				synchronized (surfaceHolder) {
-//					// update game state
-//					this.gamePanel.update();
-//					// render state on the screen
-//					// draws the canvas on the panel
-//					this.gamePanel.render(canvas);
-//				}
-//			} finally {				
-//				// in case of an exception the surface is not left
-//				// in an inconsistent state
-//				if (canvas != null) {
-//					surfaceHolder.unlockCanvasAndPost(canvas);
-//				}
-//			} // end finally
-//		}
-//	}
-	 
 
 	 private final static int 	MAX_FPS = 50;
 	 private final static int	MAX_FRAME_SKIPS = 5;
@@ -67,7 +67,7 @@ public class MainThread extends Thread {
 	 	Log.d(TAG, "Starting game loop");
 
 	 	long beginTime;		// the time when the cycle begun
-	 	long timeDiff;		// the time it took for the cycle to execute
+	 		// the time it took for the cycle to execute
 	 	int sleepTime;		// ms to sleep (<0 if we're behind)
 	 	int framesSkipped;	// number of frames being skipped 
 
@@ -81,11 +81,10 @@ public class MainThread extends Thread {
 	 			synchronized (surfaceHolder) {
 	 				beginTime = System.currentTimeMillis();
 	 				framesSkipped = 0;
-	 				// update game state
+
 	 				this.gamePanel.update();
-	 				// render state to the screen
-	 				// draws the canvas on the panel
 	 				this.gamePanel.render(canvas);
+	 				
 	 				// calculate how long did the cycle take
 	 				timeDiff = System.currentTimeMillis() - beginTime;
 	 				// calculate sleep time
