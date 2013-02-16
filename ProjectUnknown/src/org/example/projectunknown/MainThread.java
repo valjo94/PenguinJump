@@ -4,43 +4,12 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-public class MainThread extends Thread {
-
-	public long timeDiff;	
+public class MainThread extends Thread {	
 	
 	private static final String TAG = MainThread.class.getSimpleName();
 	
 	// flag to hold game state
-	private boolean running;
-	//	TODO
-	//	static final int GAME_READY = 0;
-	//	static final int GAME_RUNNING = 1;
-	//	static final int GAME_PAUSED = 2;
-	//	static final int GAME_LEVEL_END = 3;
-	//	static final int GAME_OVER = 4;
-	
-	//	public void update(float deltaTime) {
-	//		if(deltaTime > 0.1f)
-	//		deltaTime = 0.1f;
-	//		switch(state) {
-	//			case GAME_READY:
-	//				updateReady();
-	//			break;
-	//		case GAME_RUNNING:
-	//			updateRunning(deltaTime);
-	//			break;
-	//		case GAME_PAUSED:
-	//			updatePaused();
-	//			break;
-	//		case GAME_LEVEL_END:
-	//			updateLevelEnd();
-	//			break;
-	//		case GAME_OVER:
-	//			updateGameOver();
-	//			break;
-	//		}
-	//	}
-	
+	private boolean running;	
 	
 	private SurfaceHolder surfaceHolder;
 	private MainGamePanel gamePanel;
@@ -67,7 +36,7 @@ public class MainThread extends Thread {
 	 	Log.d(TAG, "Starting game loop");
 
 	 	long beginTime;		// the time when the cycle begun
-	 		// the time it took for the cycle to execute
+	 	long timeDiff;		// the time it took for the cycle to execute
 	 	int sleepTime;		// ms to sleep (<0 if we're behind)
 	 	int framesSkipped;	// number of frames being skipped 
 
@@ -111,11 +80,8 @@ public class MainThread extends Thread {
 	 			if (canvas != null) {
 	 				surfaceHolder.unlockCanvasAndPost(canvas);
 	 			}
-	 		}	// end finally
-	 	}
+	 		}	
+	 	} // end while
 	 }
 
-
- 
- 
 }

@@ -27,7 +27,7 @@ public class MainGamePanel extends SurfaceView implements
 	private PlayerHero playerHero;
 	private Velocity velocity;
 	
-	//Sensors data
+	//Sensors data arrays
 	private SensorManager mSensorManager;
 	private float[] mAccelerometerReading;
 	private float[] mMagneticFieldReading;
@@ -36,7 +36,7 @@ public class MainGamePanel extends SurfaceView implements
 	public float[] mOrientation = new float[3];
 	
 	
-	//TODO floors
+	//TODO Blocks - Make Dynamic array of blocks with random X coords
 	private Block block;
 	Block[] blocksArray = new Block[6];
 	
@@ -46,7 +46,9 @@ public class MainGamePanel extends SurfaceView implements
   
 		//Handling the events happening on the actual surface.
 		getHolder().addCallback(this);
-  		playerHero = new PlayerHero(BitmapFactory.decodeResource(getResources(), R.drawable.smiley), 120 , 440 );
+		
+		//Creating the player
+  		playerHero = new PlayerHero(BitmapFactory.decodeResource(getResources(), R.drawable.smiley), 120 , 315 );
   		
   		int startPointY = 300;
   		int startPointX = 0;
@@ -63,17 +65,11 @@ public class MainGamePanel extends SurfaceView implements
   
 		setFocusable(true);
 		
-
-		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-		mSensorManager.registerListener(this,
-		mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-		SensorManager.SENSOR_DELAY_GAME);
-		mSensorManager.registerListener(this,
-		mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-		SensorManager.SENSOR_DELAY_GAME);
+		getSensorData(context);
 		
 	}
 
+	//Method for landscape view - Don't touch
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	
@@ -87,7 +83,8 @@ public class MainGamePanel extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-	Log.d(TAG, "The surface is being destroyed..");
+		Log.d(TAG, "The surface is being destroyed..");
+		
 		// tell the thread to shut down and wait for it to finish
 		boolean retry = true;
 	
@@ -95,21 +92,21 @@ public class MainGamePanel extends SurfaceView implements
 			try {
 				thread.join();
 				retry = false;
+				Log.d(TAG, "Thread was shut down cleanly.");
 			} catch (InterruptedException e) {
 				// try again shutting down the thread
+				Log.d(TAG, "Thread could not shut down cleanly.");
 			}
 		}
-		Log.d(TAG, "Thread was shut down cleanly");
+		
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//			 delegating event handling to the playerHero
-			 //TODO playerHero.handleActionDown((int)event.getX(), (int)event.getY());
 			
-			// if in the lower part of the screen, then exit
+			// Exit, if in the lower part of the screen
 			if (event.getY() > getHeight() - 50) {
 				thread.setRunning(false);
 				((Activity)getContext()).finish();
@@ -117,18 +114,6 @@ public class MainGamePanel extends SurfaceView implements
 				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
 			}
 		} 
-//TODO		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//			
-//			if(playerHero.isTouched()) {
-//				// picked up and being dragged
-//				playerHero.setX((int)event.getX());
-//				playerHero.setY((int)event.getY());
-//			}
-//		} if (event.getAction() == MotionEvent.ACTION_UP) {
-//			if(playerHero.isTouched()) {
-//				playerHero.setTouched(false);
-//			}
-//		}
 		
 		return true;
 	}
@@ -137,16 +122,16 @@ public class MainGamePanel extends SurfaceView implements
 	public void onSensorChanged(SensorEvent event) {
 		
 		switch (event.sensor.getType()) {
-		case Sensor.TYPE_ACCELEROMETER:
-		{
-			mAccelerometerReading = event.values.clone();
-			break;
-		}
-		case Sensor.TYPE_MAGNETIC_FIELD:
-		{
-			mMagneticFieldReading = event.values.clone();
-			break;
-		}
+			case Sensor.TYPE_ACCELEROMETER:
+			{
+				mAccelerometerReading = event.values.clone();
+				break;
+			}
+			case Sensor.TYPE_MAGNETIC_FIELD:
+			{
+				mMagneticFieldReading = event.values.clone();
+				break;
+			}
 		}
 		if(mAccelerometerReading != null && mMagneticFieldReading != null &&
 				SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagneticFieldReading))
@@ -160,23 +145,11 @@ public class MainGamePanel extends SurfaceView implements
 	
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
 		
 	}
 	
-	// Check for Collisions with walls
+	// Check for Collisions with walls and blocks
 	public void update() {		
-		
-//		if(mOrientation[2] < 0){
-//			velocity.setxDirection(Velocity.DIRECTION_LEFT);
-//			Log.d(TAG, "Direction changed to LEFT");
-//		}
-//		if(mOrientation[2] >= 0) {
-//			velocity.setxDirection(Velocity.DIRECTION_RIGHT);
-//			Log.d(TAG, "Direction changed to RIGHT");
-//		}
-		
-		
 		
 		if (playerHero.getSpeed().getxDirection() == Velocity.DIRECTION_RIGHT 
 				&& playerHero.getX() + playerHero.getBitmap().getWidth() / 2 >= getWidth()) {
@@ -185,45 +158,46 @@ public class MainGamePanel extends SurfaceView implements
 			
 		}
 		
-		
+		//TODO
 		if (playerHero.getSpeed().getxDirection() == Velocity.DIRECTION_LEFT
 				&& playerHero.getX() - playerHero.getBitmap().getWidth() / 2 <= 0) {
 			playerHero.setX(getRight());
+			playerHero.setX((playerHero.getX() + (mOrientation[1]))*Velocity.DIRECTION_LEFT);
 			
-			playerHero.setX((playerHero.getX() - (mOrientation[1]))*Velocity.DIRECTION_LEFT);
+			System.out.println("Collision Left");
 		}
 		
 
 		
 		if (playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_DOWN
-				&& playerHero.getY() + playerHero.getBitmap().getHeight() / 2 >= getHeight()) {
+				&& playerHero.getY() + playerHight() / 2 >= getHeight()) {
 			playerHero.getSpeed().toggleYDirection();			
 			playerHero.currentY = playerHero.getY();
 		}
 
 		if (playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_UP
-				&& playerHero.getY() - playerHero.getBitmap().getHeight() / 2 <= 0) {
+				&& playerHero.getY() - playerHight() / 2 <= 0) {
 				playerHero.getSpeed().toggleYDirection();
 		}
 
 		
 		if(playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_DOWN) {
 			for(int i = 0;i < blocksArray.length; i++) {
-				if(playerHero.getY() + playerHero.getBitmap().getHeight() >= blocksArray[i].getY() 
-					&& playerHero.getY() + playerHero.getBitmap().getHeight() <= blocksArray[i].getY() + blocksArray[i].getBitmap().getHeight() /2
+				if(playerHero.getY() + playerHight() >= blocksArray[i].getY() 
+					&& playerHero.getY() + playerHight() <= blocksArray[i].getY() + blocksArray[i].getBitmap().getHeight() /2
 					&& playerHero.getX() >= blocksArray[i].getX() - blocksArray[i].getBitmap().getWidth() /2
 					&& playerHero.getX() <= blocksArray[i].getX() + blocksArray[i].getBitmap().getWidth() /2 ) {
-			playerHero.getSpeed().toggleYDirection();
-			playerHero.currentY = playerHero.getY();
-				}
-			}
+						playerHero.getSpeed().toggleYDirection();
+						playerHero.currentY = playerHero.getY();
+				}	// End if
+			} // End for
 		}
 			
-		// Update the playerHero
+		// Update the playerHero and block objects
 		playerHero.update(mOrientation[1]);
+		
 		for(int i = 0;i < blocksArray.length; i++) {
 			blocksArray[i].update();
-			//blocksArray[i].update(thread.timeDiff);
 		}
 			
 	}
@@ -236,8 +210,19 @@ public class MainGamePanel extends SurfaceView implements
 			}
 	}
 
+	private void getSensorData(Context context) {
+		// Getting Sensor info
+		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+		mSensorManager.registerListener(this,
+		mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+		SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(this,
+		mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+		SensorManager.SENSOR_DELAY_GAME);
+	}
 
-
-
+	private int playerHight() {
+		return playerHero.getBitmap().getHeight();
+	}
 
 }

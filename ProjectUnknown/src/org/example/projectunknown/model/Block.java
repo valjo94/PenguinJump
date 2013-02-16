@@ -40,35 +40,7 @@ public class Block {
 		if(type == BLOCK_TYPE_MOVING) {
 //			velocity.getXv() = BLOCK_VELOCITY;
 		}
-	}
-	
-//	public Block(int type, float x, float y) {
-//		
-//		super(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
-//		this.type = type;
-//
-//		if(type == BLOCK_TYPE_MOVING) {
-//			velocity.getSx() = BLOCK_VELOCITY;
-//		}
-//	}
-	
-//	public void update(float deltaTime) {
-//		if(type == BLOCK_TYPE_MOVING) {
-//			position.add(velocity.x * deltaTime, 0);
-//			bounds.lowerLeft.set(position).sub(BLOCK_WIDTH / 2, BLOCK_HEIGHT / 2);
-//			
-//			if(position.x < BLOCK_WIDTH / 2) {
-//				velocity.x = -velocity.x;
-//				position.x = BLOCK_WIDTH / 2;
-//			}
-//			if(position.x > World.WORLD_WIDTH - BLOCK_WIDTH / 2) {
-//				velocity.x = -velocity.x;
-//				position.x = World.WORLD_WIDTH - BLOCK_WIDTH / 2;
-//			}
-//		}
-//		stateTime += deltaTime;
-//	}
-	
+	}	
 	
 	public Bitmap getBitmap() {
 		return bitmap;
@@ -96,7 +68,7 @@ public class Block {
 		
 	}
 	
-	
+	//TODO Blocks Collisions
 	public void update() {
 		
 		if (true) { 

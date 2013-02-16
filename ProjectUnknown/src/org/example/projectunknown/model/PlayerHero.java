@@ -11,7 +11,6 @@ import android.util.Log;
 
 public class PlayerHero {
 	
-	@SuppressWarnings("unused")
 	private static final String TAG = MainGamePanel.class.getSimpleName();
 
 	private Bitmap bitmap; // the actual bitmap
@@ -25,20 +24,17 @@ public class PlayerHero {
 	//private Context context;
 	private MainGamePanel panel;
 
-	public float currentY = 450;
+	public float currentY = 315;
 	
 	public PlayerHero(Bitmap bitmap, int x, int y) {
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
-		this.velocity = new Velocity(0f , 100f, 0f, 3f);
+		this.velocity = new Velocity(0f , 180f, 0f, 4f); // xv, yv, sx , sy
 		this.destinationX = this.x + velocity.getXv() * velocity.getxDirection();
 		this.destinationY = this.y + (velocity.getYv() * velocity.getyDirection()) ;
 		
 	}
-	
-	//Constructor
-
 	
 	public Bitmap getBitmap() {
 		return bitmap;
@@ -58,15 +54,13 @@ public class PlayerHero {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
-	public boolean isTouched() {
-		return touched;
+
+	public float getDestinationY() {
+		return destinationY;
 	}
-	
-	public void setTouched(boolean touched) {
-		this.touched = touched;
+	public void setDestinationY(float destinationY) {
+		this.destinationY = destinationY;
 	}
-	
 	public Velocity getSpeed() {
 		return this.velocity;
 	}
@@ -89,18 +83,29 @@ public class PlayerHero {
 	public void update(float mOrientation) {
 		
 		if (!touched) { 
-						
-			if(mOrientation != 0)
+			velocity.setSx(mOrientation);
+			
+			//TODO Sensors + Physics
+			if(velocity.getSx() != 0)
 			{
-				if(mOrientation < 0) {
-
-					x += (this.x * (mOrientation/5));
+				if(velocity.getSx() < 0) {
+					velocity.setxDirection(Velocity.DIRECTION_LEFT);
+				} else {
+					velocity.setxDirection(Velocity.DIRECTION_RIGHT);
 				}
-				x += (this.x * (mOrientation/5));
+				
+				x += (velocity.getSx())*10;
 				velocity.setXv(x);
+			} 
+			
+			// Adding the jumping speed.
+			if(this.getY() != this.destinationY) {
+				y += (velocity.getSy() * velocity.getyDirection());
+			} else {
+					velocity.toggleYDirection();
+					this.destinationY += (velocity.getYv() * velocity.getyDirection());
 			}
 			
-			//TODO
 //			if(mOrientation != 0 && this.getX() != this.destinationX)
 //			{
 //				x += (velocity.getSx() * velocity.getxDirection());
@@ -109,42 +114,23 @@ public class PlayerHero {
 //				this.destinationX += (velocity.getXv() * velocity.getxDirection());
 //			}
 			
-			//TODO Jump = 200px Up
+			//TODO Jump = 180px Up collision
 			if(velocity.getyDirection() == Velocity.DIRECTION_UP 
-					&& this.y <= (currentY -200)) {
+					&& this.y <= (currentY - velocity.getYv())) {
 				velocity.toggleYDirection();
 			}
 			
-			if(this.getY() != this.destinationY) {
-				y += (velocity.getSy() * velocity.getyDirection());
-			} else {
-				velocity.toggleYDirection();
-				this.destinationY += (velocity.getYv() * velocity.getyDirection());
-			} 
 			
-			Log.d(TAG, "Coords: x=" + this.getX() + ",y=" + this.getY() + ", Yv= " + velocity.getYv());
+			
+			//Log.d(TAG, "PlayerHero Coords: x=" + this.getX() + ",y=" + this.getY() + ", Yv= " + velocity.getYv());
 			
 		}
 	}
 	
 	public void handleActionDown(int eventX, int eventY) {
-//		if (eventX >= (x - bitmap.getWidth() / 2) && (eventX <= (x + bitmap.getWidth()/2))) {
-//			if (eventY >= (y - bitmap.getHeight() / 2) && (y <= (y + bitmap.getHeight() / 2))) {
-//				// playerHero touched
-//			    setTouched(true);
-//			} else {
-//				setTouched(false);
-//		   }
-//		} else {
-//			setTouched(false);
-//		}
+
 	}
 
-//	@Override
-//	public void onAccuracyChanged(Sensor arg0, int arg1) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 
 
 }

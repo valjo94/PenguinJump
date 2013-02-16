@@ -30,22 +30,12 @@ public class Velocity {
 	public void setXv(float xv) {
 		this.xv = xv;
 	}
-	
-	public float getSx() {
-		return sx;
-	}
-	
-	public float getSy() {
-		return sy;
-	}
-	
 	public float getYv() {
 		return yv;
 	}
 	public void setYv(float yv) {
 		this.yv = yv;
 	}
-
 	public int getxDirection() {
 		return xDirection;
 	}
@@ -55,6 +45,19 @@ public class Velocity {
 	public int getyDirection() {
 		return yDirection;
 	}
+	public float getSx() {
+		return sx;
+	}
+	public void setSx(float sx) {
+		this.sx = sx;
+	}
+	public float getSy() {
+		return sy;
+	}
+	public void setSy(float sy) {
+		this.sy = sy;
+	}
+	
 	public void setyDirection(int yDirection) {
 		this.yDirection = yDirection;
 	}
