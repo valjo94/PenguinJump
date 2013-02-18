@@ -9,7 +9,7 @@
     
     <string name="main_title">Project Unknown</string>
    
-    <string name="continue_label">Continue</string>
+    <string name="options_label">Options</string>
     <string name="new_game_label">New Game</string>
     <string name="high_score_label">High Score</string>
     <string name="about_label">About</string>
@@ -26,6 +26,10 @@
 		Copyright by Valentin Dimitrov (studied software engineering
 		 in TUES-Bulgaria.)
 	</string>
+	
+	<string name="pause_game">Pause Game</string>
+	<string name="resume_game">Resume Game</string>
+	<string name="exit_game">Exit Game</string>
     
 	<string name="new_game_title">Themes</string>
 	<string name="game_theme_1_label">Game Theme 1</string>

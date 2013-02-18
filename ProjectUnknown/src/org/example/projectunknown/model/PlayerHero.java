@@ -18,7 +18,7 @@ public class PlayerHero {
 	private float y;   // the Y coordinate
 	private boolean touched; // is the playerHero touched
 	private Velocity velocity; // the speed with its directions
-	private float destinationX;
+	//private float destinationX;
 	private float destinationY;
 
 	//private Context context;
@@ -31,7 +31,7 @@ public class PlayerHero {
 		this.x = x;
 		this.y = y;
 		this.velocity = new Velocity(0f , 180f, 0f, 4f); // xv, yv, sx , sy
-		this.destinationX = this.x + velocity.getXv() * velocity.getxDirection();
+		//this.destinationX = this.x + velocity.getXv() * velocity.getxDirection();
 		this.destinationY = this.y + (velocity.getYv() * velocity.getyDirection()) ;
 		
 	}
@@ -98,14 +98,6 @@ public class PlayerHero {
 				velocity.setXv(x);
 			} 
 			
-			// Adding the jumping speed.
-			if(this.getY() != this.destinationY) {
-				y += (velocity.getSy() * velocity.getyDirection());
-			} else {
-					velocity.toggleYDirection();
-					this.destinationY += (velocity.getYv() * velocity.getyDirection());
-			}
-			
 //			if(mOrientation != 0 && this.getX() != this.destinationX)
 //			{
 //				x += (velocity.getSx() * velocity.getxDirection());
@@ -113,6 +105,14 @@ public class PlayerHero {
 //				velocity.toggleXDirection();
 //				this.destinationX += (velocity.getXv() * velocity.getxDirection());
 //			}
+			
+			// Adding the jumping speed.
+			if(this.getY() != this.destinationY) {
+				y += (velocity.getSy() * velocity.getyDirection());
+			} else {
+					velocity.toggleYDirection();
+					this.destinationY += (velocity.getYv() * velocity.getyDirection());
+			}
 			
 			//TODO Jump = 180px Up collision
 			if(velocity.getyDirection() == Velocity.DIRECTION_UP 

@@ -6,20 +6,19 @@ import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {	
 	
-	private static final String TAG = MainThread.class.getSimpleName();
+	private static final String TAG = MainThread.class.getSimpleName();	
 	
 	// flag to hold game state
 	private boolean running;	
-	
 	private SurfaceHolder surfaceHolder;
 	private MainGamePanel gamePanel;
 
+	
+
 	public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
-	 
 		super();
 		this.surfaceHolder = surfaceHolder;
-		this.gamePanel = gamePanel;
-	 
+		this.gamePanel = gamePanel;	 
 	}
  
 	 public void setRunning(boolean running) {
@@ -41,8 +40,9 @@ public class MainThread extends Thread {
 	 	int framesSkipped;	// number of frames being skipped 
 
 	 	sleepTime = 0;
-
+ 	
 	 	while (running) {
+
 	 		canvas = null;
 	 		// try locking the canvas for exclusive pixel editing in the surface
 	 		try {

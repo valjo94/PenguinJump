@@ -23,16 +23,16 @@
             android:textSize="24.5sp" />
 
         <Button
-            android:id="@+id/continue_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/continue_label" />
-
-        <Button
             android:id="@+id/new_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/new_game_label" />
+
+        <Button
+            android:id="@+id/options_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/options_label" />
 
         <Button
             android:id="@+id/score_button"
@@ -52,7 +52,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/exit_label" />
-        
     </LinearLayout>
 
 </LinearLayout>

@@ -29,10 +29,10 @@ public class Block {
 	int state;
 	float stateTime;
 	
-	public Block(Bitmap bitmap, int x, int y) {
+	public Block(Bitmap bitmap, float startPointX, float startPointY) {
 		this.bitmap = bitmap;
-		this.x = x;
-		this.y = y;
+		this.x = startPointX;
+		this.y = startPointY;
 		
 		this.state = BLOCK_STATE_NORMAL;
 		this.stateTime = 0;

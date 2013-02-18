@@ -2,22 +2,36 @@ package org.example.projectunknown;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Scroller;
 
 public class ProjectUnknown extends Activity implements OnClickListener {
 
 	private static final String TAG = ProjectUnknown.class.getSimpleName();
 	
+	MainGamePanel panel;
+	
+//	Scroller mScroller;
+//	Context context;
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	//TODO
+//		context = this;
+//		mScroller = new Scroller(context);
 		
 		// requesting to turn the title OFF and making it full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -27,14 +41,12 @@ public class ProjectUnknown extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_project_unknown);
 		Log.d(TAG, "Main Menu view added");
 		
-		//TODO
-		
 		// GAME MENU BUTTON LISTENERS
-		View continueButton = this.findViewById(R.id.continue_button);
-		continueButton.setOnClickListener(this);
-		
 		View newButton = this.findViewById(R.id.new_button);
 		newButton.setOnClickListener(this);
+
+		View continueButton = this.findViewById(R.id.options_button);
+		continueButton.setOnClickListener(this);
 		
 		View scoreButton = this.findViewById(R.id.score_button);
 		scoreButton.setOnClickListener(this);
@@ -45,7 +57,8 @@ public class ProjectUnknown extends Activity implements OnClickListener {
 		View exitButton = this.findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
 	}
-
+	
+// Menu in a new view
 //	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {
 //		// Inflate the menu; this adds items to the action bar if it is present.
@@ -55,15 +68,41 @@ public class ProjectUnknown extends Activity implements OnClickListener {
 //		return true;
 //	}
 	
+	 @Override
+	    public boolean onCreateOptionsMenu(Menu menu) {
+	        boolean result = super.onCreateOptionsMenu(menu);
+	        menu.add(0, 1, 0, R.string.pause_game);
+	        menu.add(0, 2, 0, R.string.resume_game);
+	        menu.add(0,3, 0, R.string.exit_game);
+	        return result;
+	    }
+	 
+	 @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	        switch (item.getItemId()) {
+	        case 1:
+		        
+	            return true;
+	        case 2:
+	        	
+	            return true;
+	        case 3:
+	        	android.os.Process.killProcess(android.os.Process.myPid());
+				return true;
+	        }
+	        return false;
+	    }
+	
 	// GAME MENU SWITCH
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.continue_button:
-				break;
-				
+		
 			case R.id.new_button:
 				openNewGameDialog();
+				break;
+				
+			case R.id.options_button:
 				break;
 				
 			case R.id.score_button:				

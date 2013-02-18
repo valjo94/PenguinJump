@@ -17,15 +17,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Scroller;
+
 
 public class MainGamePanel extends SurfaceView implements
 	SurfaceHolder.Callback, SensorEventListener {
 
 	private static final String TAG = MainGamePanel.class.getSimpleName();
-
+	
 	private MainThread thread;
 	private PlayerHero playerHero;
-	private Velocity velocity;
 	
 	//Sensors data arrays
 	private SensorManager mSensorManager;
@@ -35,10 +36,12 @@ public class MainGamePanel extends SurfaceView implements
 	private float[] mRemapedRotationMatrix = new float[16];
 	public float[] mOrientation = new float[3];
 	
-	
 	//TODO Blocks - Make Dynamic array of blocks with random X coords
 	private Block block;
-	Block[] blocksArray = new Block[6];
+	Block[] blocksArray = new Block[10];
+	
+	float startPointY = 310;
+	float startPointX = -25;
 	
 	public MainGamePanel(Context context) {
   
@@ -50,19 +53,18 @@ public class MainGamePanel extends SurfaceView implements
 		//Creating the player
   		playerHero = new PlayerHero(BitmapFactory.decodeResource(getResources(), R.drawable.smiley), 120 , 315 );
   		
-  		int startPointY = 300;
-  		int startPointX = 0;
+
   	
   		for(int i = 0; i< blocksArray.length; i++) {
   			startPointY -=40;
-  			startPointX +=50;
+  			startPointX +=45;
   			block = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.floor), startPointX, startPointY);
   			blocksArray[i] = block;
   		
   		}
 		// create the game loop thread
 		thread = new MainThread(getHolder(), this);
-  
+		
 		setFocusable(true);
 		
 		getSensorData(context);
@@ -106,13 +108,7 @@ public class MainGamePanel extends SurfaceView implements
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			
-			// Exit, if in the lower part of the screen
-			if (event.getY() > getHeight() - 50) {
-				thread.setRunning(false);
-				((Activity)getContext()).finish();
-			} else {
-				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-			}
+			Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
 		} 
 		
 		return true;
@@ -155,16 +151,12 @@ public class MainGamePanel extends SurfaceView implements
 				&& playerHero.getX() + playerHero.getBitmap().getWidth() / 2 >= getWidth()) {
 			playerHero.setX(getLeft());
 			playerHero.setX((playerHero.getX() + (mOrientation[1]))*Velocity.DIRECTION_RIGHT);
-			
 		}
 		
-		//TODO
 		if (playerHero.getSpeed().getxDirection() == Velocity.DIRECTION_LEFT
-				&& playerHero.getX() - playerHero.getBitmap().getWidth() / 2 <= 0) {
+				&& playerHero.getX() - playerHero.getBitmap().getWidth() / 2 <= getLeft()) {
 			playerHero.setX(getRight());
-			playerHero.setX((playerHero.getX() + (mOrientation[1]))*Velocity.DIRECTION_LEFT);
-			
-			System.out.println("Collision Left");
+			playerHero.setX(-(playerHero.getX() - (mOrientation[1]))*Velocity.DIRECTION_LEFT);
 		}
 		
 
@@ -187,30 +179,45 @@ public class MainGamePanel extends SurfaceView implements
 					&& playerHero.getY() + playerHight() <= blocksArray[i].getY() + blocksArray[i].getBitmap().getHeight() /2
 					&& playerHero.getX() >= blocksArray[i].getX() - blocksArray[i].getBitmap().getWidth() /2
 					&& playerHero.getX() <= blocksArray[i].getX() + blocksArray[i].getBitmap().getWidth() /2 ) {
+						
 						playerHero.getSpeed().toggleYDirection();
 						playerHero.currentY = playerHero.getY();
+						//TODO				
+//						zoomIn();
 				}	// End if
 			} // End for
 		}
-			
+		
+		// Blocks collision with walls
+		for(int i = 0;i < blocksArray.length; i++) {
+			if(blocksArray[i].getX() + blocksArray[i].getBitmap().getWidth() /2 >= getWidth()) {
+				blocksArray[i].setX(blocksArray[i].getBitmap().getWidth() /2);
+				startPointX = blocksArray[i].getX();
+			}
+		}
+		
 		// Update the playerHero and block objects
 		playerHero.update(mOrientation[1]);
 		
 		for(int i = 0;i < blocksArray.length; i++) {
 			blocksArray[i].update();
 		}
-			
+		
 	}
+	
+
 	
 	protected void render(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		playerHero.draw(canvas);	
+		
 		for(int i = 0; i < blocksArray.length; i++) {
 			blocksArray[i].draw(canvas);
 			}
 	}
 
 	private void getSensorData(Context context) {
+		
 		// Getting Sensor info
 		mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 		mSensorManager.registerListener(this,
@@ -225,4 +232,16 @@ public class MainGamePanel extends SurfaceView implements
 		return playerHero.getBitmap().getHeight();
 	}
 
+	//TODO
+//	public void zoomIn() {
+////		mScroller = new Scroller(project.context);
+//	     // Revert any animation currently in progress
+//		project.mScroller.forceFinished(true);
+//	     // Start scrolling by providing a starting point and
+//	     // the distance to travel
+//		project.mScroller.startScroll(0, 0, 0, 50);
+//	     // Invalidate to request a redraw
+//	     invalidate();
+//	 }
+	
 }
