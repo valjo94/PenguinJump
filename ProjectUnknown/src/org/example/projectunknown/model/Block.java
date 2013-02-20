@@ -1,14 +1,13 @@
 package org.example.projectunknown.model;
 
 import org.example.projectunknown.MainGamePanel;
+import org.example.projectunknown.model.components.Velocity;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 public class Block
 {
-
-	@SuppressWarnings("unused")
-	private static final String TAG = MainGamePanel.class.getSimpleName();
 
 	public static final float BLOCK_WIDTH = 2;
 
@@ -22,7 +21,10 @@ public class Block
 
 	// public static final int BLOCK_STATE_PULVERIZING = 1;
 	// public static final float BLOCK_PULVERIZE_TIME = 0.2f * 4;
+	
 	public static final float BLOCK_VELOCITY = 2;
+
+	private static final int BLOCK_TYPE_NORMAL = 0;
 
 	private Bitmap bitmap; // the actual bitmap
 
@@ -36,19 +38,18 @@ public class Block
 
 	float stateTime;
 
+	private Velocity velocity;
+
+	private int blockType = BLOCK_TYPE_NORMAL;
+
+	MainGamePanel panel;
+
 	public Block(Bitmap bitmap, float startPointX, float startPointY)
 	{
 		this.bitmap = bitmap;
 		this.x = startPointX;
 		this.y = startPointY;
-
-		this.state = BLOCK_STATE_NORMAL;
-		this.stateTime = 0;
-
-		if (type == BLOCK_TYPE_MOVING)
-		{
-			// velocity.getXv() = BLOCK_VELOCITY;
-		}
+		this.velocity = new Velocity(2f, 0f, 0f, 0f);
 	}
 
 	public Bitmap getBitmap()
@@ -59,6 +60,16 @@ public class Block
 	public void setBitmap(Bitmap bitmap)
 	{
 		this.bitmap = bitmap;
+	}
+
+	public void setType(int blockType)
+	{
+		this.blockType = blockType;
+	}
+
+	public int getType()
+	{
+		return blockType;
 	}
 
 	public float getX()
@@ -81,6 +92,16 @@ public class Block
 		this.y = currentY;
 	}
 
+	public Velocity getVelocity()
+	{
+		return velocity;
+	}
+
+	public void setVelocity(Velocity velocity)
+	{
+		this.velocity = velocity;
+	}
+
 	public void draw(Canvas canvas)
 	{
 
@@ -88,14 +109,13 @@ public class Block
 
 	}
 
-	// TODO Blocks Collisions
+	// Blocks movement
 	public void update()
 	{
 
-		if (true)
+		if (blockType == BLOCK_TYPE_MOVING)
 		{
-
-			// Log.d(TAG, "Coords: x=" + this.getX() + ",y=" + this.getY());
+			x += (velocity.getXv() * velocity.getxDirection());
 
 		}
 	}

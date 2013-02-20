@@ -27,6 +27,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	private static final String TAG = MainGamePanel.class.getSimpleName();
 
+	private static final float COLLISION_UP = 70;
+
 	private MainThread thread;
 
 	private PlayerHero playerHero;
@@ -47,6 +49,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	public float[] mOrientation = new float[3];
 
+	// Blocks variables
 	Block block;
 
 	List<Block> blockList = new ArrayList<Block>();
@@ -61,6 +64,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	float currentY;
 
+	private int blockType;
+
+	// private Velocity velocity;
+
 	public MainGamePanel(Context context)
 	{
 
@@ -68,24 +75,21 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 		// Handling the events happening on the actual surface.
 		getHolder().addCallback(this);
-
-		// blockList = new ArrayList<Block>();
-		// array = new ArrayList<Float>();
+		
+		// Creating blocks.
 		currentY = BLOCK_Y;
-
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 7; i++)
 		{
-			currentY -= 45;
+			currentY -= 50;
 			blockX = rand.nextInt(200) + 20;
 			block = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.floor), blockX, currentY);
 			blockList.add(block);
 			array.add(currentY);
 		}
 
-		// Creating the player
+		// Creating the player.
 		playerHero = new PlayerHero(BitmapFactory.decodeResource(getResources(), R.drawable.smiley), 120, 315);
-
-		// create the game loop thread
+		// Create the game loop thread.
 		thread = new MainThread(getHolder(), this);
 
 		setFocusable(true);
@@ -181,38 +185,39 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	}
 
-	// Check for Collisions with walls and blocks
 	public void update()
 	{
-
-		if (playerHero.getSpeed().getxDirection() == Velocity.DIRECTION_RIGHT
+		// Collision with RIGHT side of screen.
+		if (playerHero.getVelocity().getxDirection() == Velocity.DIRECTION_RIGHT
 				&& playerHero.getX() + playerHero.getBitmap().getWidth() / 2 >= getWidth())
 		{
 			playerHero.setX(getLeft());
 			playerHero.setX((playerHero.getX() + (mOrientation[1])) * Velocity.DIRECTION_RIGHT);
 		}
-
-		if (playerHero.getSpeed().getxDirection() == Velocity.DIRECTION_LEFT
+		// Collision with LEFT side of screen.
+		if (playerHero.getVelocity().getxDirection() == Velocity.DIRECTION_LEFT
 				&& playerHero.getX() - playerHero.getBitmap().getWidth() / 2 <= getLeft())
 		{
 			playerHero.setX(getRight());
 			playerHero.setX(-(playerHero.getX() - (mOrientation[1])) * Velocity.DIRECTION_LEFT);
 		}
-
-		if (playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_DOWN
-				&& playerHero.getY() + playerHight() / 2 >= getHeight())
+		// Collision with BOTTOM of screen.
+		if (playerHero.getVelocity().getyDirection() == Velocity.DIRECTION_DOWN
+				&& playerHero.getY() + playerHight() / 2 >= 320)
 		{
-			playerHero.getSpeed().toggleYDirection();
-			playerHero.currentY = playerHero.getY();
+			playerHero.getVelocity().toggleYDirection();
+			// playerHero.currentY = playerHero.getY();
+			playerHero.setDestinationY(playerHero.getY()
+					+ (playerHero.getVelocity().getYv() * playerHero.getVelocity().getyDirection()));
 		}
-
-		if (playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_UP
-				&& playerHero.getY() - playerHight() / 2 <= 0)
+		// Collision with TOP of screen
+		if (playerHero.getVelocity().getyDirection() == Velocity.DIRECTION_UP
+				&& playerHero.getY() - playerHight() / 2 <= COLLISION_UP)
 		{
-			playerHero.getSpeed().toggleYDirection();
+			playerHero.getVelocity().toggleYDirection();
 		}
-
-		if (playerHero.getSpeed().getyDirection() == Velocity.DIRECTION_DOWN)
+		// Collision of the playerHero with BLOCKS.
+		if (playerHero.getVelocity().getyDirection() == Velocity.DIRECTION_DOWN)
 		{
 			for (int i = 0; i < blockList.size(); i++)
 			{
@@ -223,64 +228,102 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 						&& playerHero.getX() <= blockList.get(i).getX() + blockList.get(i).getBitmap().getWidth() / 2)
 				{
 
-					playerHero.getSpeed().toggleYDirection();
-					playerHero.currentY = playerHero.getY();
+					playerHero.getVelocity().toggleYDirection();
+					playerHero.setDestinationY(playerHero.getY()
+							+ (playerHero.getVelocity().getYv() * playerHero.getVelocity().getyDirection()));
 				}
 			}
 		}
 
+		// Scrolling the screen.
+		if (playerHero.getY() <= blockList.get(3).getY())
+		{
+			scrollUp();
+		}
+
+		// Collision when block is under the bottom of screen.
 		if (blockList.get(0).getY() >= 320)
 		{
 			blockList.remove(0);
-			// System.out.println("Removed Block");
 			array.remove(0);
 		}
-
-		if (blockList.size() <= 7)
+		// Collision when block is deleted.
+		if (blockList.size() <= 6)
 		{
+			blockType = rand.nextInt(10);
+			
 			blockX = rand.nextInt(200) + 20;
-			currentY = blockList.get(blockList.size() - 1).getY() - 45;
+			currentY = blockList.get(blockList.size() - 1).getY() - 50;
 
 			block = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.floor), blockX, currentY);
+
+			if (blockType <= 3)
+			{
+				block.setType(Block.BLOCK_TYPE_MOVING);
+			}
 			blockList.add(block);
-			// System.out.println("New Block Created");
 			array.add(currentY);
 		}
 
-		// Update the playerHero and block objects
+		// Update the playerHero and block objects.
+		for (int i = 0; i < blockList.size(); i++)
+		{
+			// Collision with right side of screen.
+			if (blockList.get(i).getX() >= getWidth() - blockList.get(i).getBitmap().getWidth() / 2)
+			{
+				blockList.get(i).getVelocity().toggleXDirection();
+				System.out.println("Collision right");
+			}
+			// Collision with left side of screen.
+			if (blockList.get(i).getX() <= 0 + blockList.get(i).getBitmap().getWidth() / 2)
+			{
+				blockList.get(i).getVelocity().toggleXDirection();
+			}
+			// Update the current block.
+			blockList.get(i).update();
+		}
 		playerHero.update(mOrientation[1]);
 
 	}
 
-	private void scrollUp()
+	private void timeScroll()
 	{
 		for (int i = 0; i < blockList.size(); i++)
 		{
+			currentY = array.get(i) + 0.5f;
+			blockList.get(i).setY(currentY);
 
-			currentY = array.get(i) + 3;
+			// Changing the Blocks Y coords in the array.
 			array.remove(i);
 			array.add(i, currentY);
+		}
+	}
 
+	private void scrollUp()
+	{
+		playerHero.setDestinationY(COLLISION_UP + 2);
+		for (int i = 0; i < blockList.size(); i++)
+		{
+			currentY = array.get(i) + 4;
 			blockList.get(i).setY(currentY);
+
+			// Changing the Blocks Y coords in the array.
+			array.remove(i);
+			array.add(i, currentY);
 		}
 	}
 
 	protected void render(Canvas canvas)
 	{
-		canvas.drawColor(Color.BLACK);
-		playerHero.draw(canvas);
-
-		if (playerHero.getY() - playerHight() <= (getHeight() * 0.35))
-		{
-			scrollUp();
-
-		}
+		canvas.drawColor(Color.WHITE);
+		timeScroll();
 
 		Iterator<Block> it = blockList.iterator();
 		while (it.hasNext())
 		{
 			it.next().draw(canvas);
 		}
+		playerHero.draw(canvas);
 
 	}
 

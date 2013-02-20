@@ -1,6 +1,5 @@
 package org.example.projectunknown.model;
 
-import org.example.projectunknown.MainGamePanel;
 import org.example.projectunknown.model.components.Velocity;
 
 import android.graphics.Bitmap;
@@ -8,9 +7,6 @@ import android.graphics.Canvas;
 
 public class PlayerHero
 {
-
-	@SuppressWarnings("unused")
-	private static final String TAG = MainGamePanel.class.getSimpleName();
 
 	private Bitmap bitmap; // the actual bitmap
 
@@ -22,17 +18,17 @@ public class PlayerHero
 
 	private Velocity velocity; // the speed with its directions
 
-	private float destinationY;
+	private float destinationY; // the destination Y coordinate
 
-	public float currentY = 315;
+	// public float currentY = 315; // the X coordinate in a given time
 
 	public PlayerHero(Bitmap bitmap, int x, int y)
 	{
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
-		this.velocity = new Velocity(0f, 140f, 0f, 3.5f); // xv, yv, sx , sy
-		this.destinationY = this.y + (velocity.getYv() * velocity.getyDirection());
+		this.velocity = new Velocity(0f, 200f, 0f, 4.5f); // xv, yv, sx , sy
+		this.destinationY = this.y + (this.velocity.getYv() * this.velocity.getyDirection());
 
 	}
 
@@ -61,9 +57,9 @@ public class PlayerHero
 		return y;
 	}
 
-	public void setY(int y)
+	public void setY(float f)
 	{
-		this.y = y;
+		this.y = f;
 	}
 
 	public float getDestinationY()
@@ -76,14 +72,24 @@ public class PlayerHero
 		this.destinationY = destinationY;
 	}
 
-	public Velocity getSpeed()
+	// public float getDifference()
+	// {
+	// return difference;
+	// }
+	//
+	// public void setDifference(float difference)
+	// {
+	// this.difference = difference;
+	// }
+
+	public Velocity getVelocity()
 	{
 		return this.velocity;
 	}
 
-	public void setSpeed(Velocity speed)
+	public void setVelocity(Velocity velocity)
 	{
-		this.velocity = speed;
+		this.velocity = velocity;
 	}
 
 	public void draw(Canvas canvas)
@@ -105,7 +111,7 @@ public class PlayerHero
 		{
 			velocity.setSx(mOrientation);
 
-			// Sensors + Physics
+			// Sensors + Physics (X axis movement)
 			if (velocity.getSx() != 0)
 			{
 				if (velocity.getSx() < 0)
@@ -121,39 +127,23 @@ public class PlayerHero
 				velocity.setXv(x);
 			}
 
-			// Adding the jumping speed.
-			if (this.getY() != this.destinationY)
-			{
-				y += (velocity.getSy() * velocity.getyDirection());
+			// Jumping (Y axis movement)
 
-				// TODO Adding gravity
-				if (velocity.getSy() > 0)
-				{
-					if (velocity.getyDirection() == Velocity.DIRECTION_UP)
-					{
-						velocity.setSy(velocity.getSy() - 0.01f);
-						// System.out.println("DIRECTION UP");
-					}
-					else
-					{
-						velocity.setSy(velocity.getSy() + 0.01f);
-						// System.out.println("Should be 1: " + velocity.getyDirection());
-					}
-				}
-			}
-			else
+			if (this.getY() != this.destinationY && this.velocity.getyDirection() == Velocity.DIRECTION_UP)
 			{
+				y += (this.velocity.getSy() * velocity.getyDirection());
+			}
+			else if (this.velocity.getyDirection() == Velocity.DIRECTION_UP && this.getY() == this.destinationY)
+			{
+
 				velocity.toggleYDirection();
-				this.destinationY += (velocity.getYv() * velocity.getyDirection());
-			}
+				// this.destinationY = this.y + (velocity.getYv() * velocity.getyDirection());
 
-			// Jump = ?px Up collision
-			if (velocity.getyDirection() == Velocity.DIRECTION_UP && this.y <= (currentY - velocity.getYv()))
+			}
+			else if (this.velocity.getyDirection() == Velocity.DIRECTION_DOWN)
 			{
-				velocity.toggleYDirection();
+				y += (this.velocity.getSy() * velocity.getyDirection());
 			}
-
-			// Log.d(TAG, "PlayerHero Coords: x=" + this.getX() + ",y=" + this.getY() + ", Yv= " + velocity.getYv());
 
 		}
 	}
