@@ -9,20 +9,7 @@ import android.graphics.Canvas;
 public class Block
 {
 
-	public static final float BLOCK_WIDTH = 2;
-
-	public static final float BLOCK_HEIGHT = 0.5f;
-
-	public static final boolean BLOCK_TYPE_STATIC = false;
-
 	public static final int BLOCK_TYPE_MOVING = 1;
-
-	public static final int BLOCK_STATE_NORMAL = 0;
-
-	// public static final int BLOCK_STATE_PULVERIZING = 1;
-	// public static final float BLOCK_PULVERIZE_TIME = 0.2f * 4;
-	
-	public static final float BLOCK_VELOCITY = 2;
 
 	private static final int BLOCK_TYPE_NORMAL = 0;
 

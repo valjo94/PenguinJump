@@ -20,14 +20,12 @@ public class PlayerHero
 
 	private float destinationY; // the destination Y coordinate
 
-	// public float currentY = 315; // the X coordinate in a given time
-
 	public PlayerHero(Bitmap bitmap, int x, int y)
 	{
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
-		this.velocity = new Velocity(0f, 200f, 0f, 4.5f); // xv, yv, sx , sy
+		this.velocity = new Velocity(0f, 130f, 0f, 4.5f); // xv, yv, sx , sy
 		this.destinationY = this.y + (this.velocity.getYv() * this.velocity.getyDirection());
 
 	}
@@ -72,16 +70,6 @@ public class PlayerHero
 		this.destinationY = destinationY;
 	}
 
-	// public float getDifference()
-	// {
-	// return difference;
-	// }
-	//
-	// public void setDifference(float difference)
-	// {
-	// this.difference = difference;
-	// }
-
 	public Velocity getVelocity()
 	{
 		return this.velocity;
@@ -123,26 +111,22 @@ public class PlayerHero
 					velocity.setxDirection(Velocity.DIRECTION_RIGHT);
 				}
 
-				x += (velocity.getSx()) * 10;
+				x += (velocity.getSx()) * 20;
 				velocity.setXv(x);
 			}
 
 			// Jumping (Y axis movement)
-
-			if (this.getY() != this.destinationY && this.velocity.getyDirection() == Velocity.DIRECTION_UP)
+			if (this.getY() > this.destinationY && this.velocity.getyDirection() == Velocity.DIRECTION_UP)
 			{
-				y += (this.velocity.getSy() * velocity.getyDirection());
+				y += (this.velocity.getSy() * this.velocity.getyDirection());
 			}
-			else if (this.velocity.getyDirection() == Velocity.DIRECTION_UP && this.getY() == this.destinationY)
+			else if (this.velocity.getyDirection() == Velocity.DIRECTION_UP && this.getY() <= this.destinationY)
 			{
-
 				velocity.toggleYDirection();
-				// this.destinationY = this.y + (velocity.getYv() * velocity.getyDirection());
-
 			}
 			else if (this.velocity.getyDirection() == Velocity.DIRECTION_DOWN)
 			{
-				y += (this.velocity.getSy() * velocity.getyDirection());
+				y += (this.velocity.getSy() * this.velocity.getyDirection());
 			}
 
 		}

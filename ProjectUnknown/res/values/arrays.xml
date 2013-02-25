@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<array name="themes">
-		<item>@string/game_theme_1_label</item>
-		<item>@string/game_theme_2_label</item>
-		<item>@string/game_theme_3_label</item>
-	</array>
+
+    <array name="themes">
+        <item>@string/game_theme_1_label</item>
+        <item>@string/game_theme_2_label</item>
+        <item>@string/game_theme_3_label</item>
+    </array>
+    <array name="highscores">
+        <item>@string/highscore_1</item>
+        <item>@string/highscore_2</item>
+        <item>@string/highscore_3</item>
+        <item>@string/highscore_4</item>
+        <item>@string/highscore_5</item>
+    </array>
+    <array name="pause">
+        <item>@string/pause_game_label</item>
+    </array>
+    <array name="resume">
+        <item>@string/resume_game_label</item>
+    </array>
+
 </resources>

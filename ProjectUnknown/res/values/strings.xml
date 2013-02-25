@@ -2,38 +2,35 @@
 <resources>
 
     <string name="app_name">Project Unknown</string>
-
-    
-    <string name="landscape_view">This Application does not support landscape view. \n
-       							  Please rotate the device vertically.</string>
-    
     <string name="main_title">Project Unknown</string>
-   
-    <string name="options_label">Options</string>
-    <string name="new_game_label">New Game</string>
-    <string name="high_score_label">High Score</string>
-    <string name="about_label">About</string>
-    <string name="exit_label">Exit</string>
-    			  
     <string name="about_title">About Project Unknown</string>
-	<string name="about_text">
-		Project Unknown is an arcade game.Your purpose 
+    <string name="pause_title">Pause Game</string>
+    <string name="resume_title">Resume Game</string>
+    <string name="new_game_title">Themes</string>
+    <string name="about_text">		Project Unknown is an arcade game.Your purpose 
 		in the game is to get the best score that you can
 		by going through the game.Getting higher and higher,
 		the blocks start moving faster and more obsticles appear.
 		This is my first game so I hope that you like it. \n\n\n\n\n
 		
 		Copyright by Valentin Dimitrov (studied software engineering
-		 in TUES-Bulgaria.)
-	</string>
-	
-	<string name="pause_game">Pause Game</string>
-	<string name="resume_game">Resume Game</string>
-	<string name="exit_game">Exit Game</string>
-    
-	<string name="new_game_title">Themes</string>
-	<string name="game_theme_1_label">Game Theme 1</string>
-	<string name="game_theme_2_label">Game Theme 2</string>
-	<string name="game_theme_3_label">Game Theme 3</string>
+		 in TUES-Bulgaria.)</string>
+    <string name="about_label">About</string>
+    <string name="options_label">Options</string>
+    <string name="new_game_label">New Game</string>
+    <string name="high_score_label">High Scores</string>
+    <string name="exit_label">Exit</string>
+    <string name="pause_game_label">Game Paused</string>
+    <string name="resume_game_label">Game Resumed</string>
+    <string name="main_menu_label">Main Menu</string>
+    <string name="exit_game_label">Exit Game</string>
+    <string name="game_theme_1_label">Game Theme 1</string>
+    <string name="game_theme_2_label">Game Theme 2</string>
+    <string name="game_theme_3_label">Game Theme 3</string>
+    <string name="highscore_1">0</string>
+    <string name="highscore_2">0</string>
+    <string name="highscore_3">0</string>
+    <string name="highscore_4">0</string>
+    <string name="highscore_5">0</string>
 
 </resources>
