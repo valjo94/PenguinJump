@@ -1,17 +1,13 @@
 package org.example.projectunknown;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.example.projectunknown.model.Block;
 import org.example.projectunknown.model.PlayerHero;
 import org.example.projectunknown.model.components.Velocity;
-import org.xml.sax.SAXException;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -43,8 +39,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	// Blocks variables
 	private Block block;
 
-	// private Block[] ground;
-
 	private List<Block> blockList = new ArrayList<Block>();
 
 	private List<Float> array = new ArrayList<Float>();
@@ -72,31 +66,23 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	float currentY;
 
-	// float groundY = 312;
-	//
-	// float groundX = 10;
-
 	private int blockType;
 
-	private int score = 0;
+	public static int score = 0;
 
-	private Boolean gameOverState = false;
+	private long beginTime;
+
+	private long currentTime;
+
+	private long timeCount;
 
 	public MainGamePanel(Context context)
 	{
-
 		super(context);
 
 		// Handling the events happening on the actual surface.
 		getHolder().addCallback(this);
-
-		// ground = new Block[6];
-		// for (int k = 0; k < ground.length; k++)
-		// {
-		// startGround = new Block(BitmapFactory.decodeResource(getResources(), R.drawable.floor), groundX, groundY);
-		// ground[k] = startGround;
-		// groundX += startGround.getBitmap().getWidth();
-		// }
+		beginTime = System.currentTimeMillis();
 
 		// Creating blocks.
 		currentY = BLOCK_Y;
@@ -112,8 +98,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		// Creating the player.
 		hero = new PlayerHero(BitmapFactory.decodeResource(getResources(), R.drawable.smiley), 120, 310);
 
+		// Creating Texts.
 		textPaint = new Paint();
-		textPaint.setColor(Color.BLACK);
 
 		// Create the game loop thread.
 		setThread(new MainThread(getHolder(), this));
@@ -134,8 +120,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	@Override
 	public void surfaceCreated(SurfaceHolder holder)
 	{
-		getThread().setRunning(true);
+		thread.setRunning(true);
 		getThread().start();
+		MainThread.gameState = GameStates.RUNNING;
 	}
 
 	@Override
@@ -215,6 +202,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		if (hero.getY() <= 320)
 		{
+			currentTime = System.currentTimeMillis() - beginTime;
 
 			// Collision with RIGHT side of screen.
 			if (hero.getVelocity().getxDirection() == Velocity.DIRECTION_RIGHT
@@ -233,7 +221,15 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			// Collision with BOTTOM of screen.
 			if (hero.getVelocity().getyDirection() == Velocity.DIRECTION_DOWN && hero.getY() + playerHight() / 2 >= 320)
 			{
-				setGameOverState(true);
+				if (currentTime <= 5000)
+				{
+					hero.getVelocity().toggleYDirection();
+				}
+				else
+				{
+					MainThread.gameState = GameStates.GAME_OVER;
+					// setGameOverState(true);
+				}
 			}
 			// Collision with highest point of the screen that the hero can get.
 			if (hero.getVelocity().getyDirection() == Velocity.DIRECTION_UP
@@ -315,34 +311,31 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 				blockList.get(i).update();
 			}
 
-			// for (int k = 0; k < ground.length; k++)
-			// {
-			// ground[k].update();
-			// }
 		}// End if(player in screen).
-		
+
 		// Player X Axis update by sensor value.
 		hero.update(mOrientation[1]);
 	}
 
 	private void timeScroll()
 	{
-		// for (int k = 0; k < ground.length; k++)
-		// {
-		// groundY += 0.5f;
-		// ground[k].setY(groundY);
-		// }
-
-		if (hero.getY() <= 320)
+		if (MainThread.gameState == GameStates.RUNNING)
 		{
-			for (int i = 0; i < blockList.size(); i++)
+			if (hero.getY() <= 320)
 			{
-				currentY = array.get(i) + 0.5f;
-				blockList.get(i).setY(currentY);
+				if (timeCount < 3)
+				{
+					timeCount = (currentTime / 100000);
+				}
+				for (int i = 0; i < blockList.size(); i++)
+				{
+					currentY = array.get(i) + 0.5f + timeCount;
+					blockList.get(i).setY(currentY);
 
-				// Changing the Blocks Y coords in the array.
-				array.remove(i);
-				array.add(i, currentY);
+					// Changing the Blocks Y coords in the array.
+					array.remove(i);
+					array.add(i, currentY);
+				}
 			}
 		}
 	}
@@ -360,17 +353,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}
 
-	protected void render(Canvas canvas) throws  InterruptedException, ParserConfigurationException, SAXException, IOException
+	protected void render(Canvas canvas)
 	{
 		canvas.drawColor(Color.WHITE);
 
-		// if (ground[1].getY() < 320)
-		// {
-		// for (int p = 0; p < ground.length; p++)
-		// {
-		// ground[p].draw(canvas);
-		// }
-		// }
 		timeScroll();
 		Iterator<Block> it = blockList.iterator();
 		while (it.hasNext())
@@ -380,11 +366,22 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		hero.draw(canvas);
 		drawScore(canvas);
 
-		drawGameOverScreen(canvas);
-		if (getGameOverState() == true)
-		{ 	
-			thread.setRunning(false);
+		if (MainThread.gameState == GameStates.PAUSED)
+		{
+			drawPaused(canvas);
 		}
+		if (MainThread.gameState == GameStates.GAME_OVER)
+		{
+			drawGameOverScreen(canvas);
+		}
+	}
+
+	private void drawPaused(Canvas canvas)
+	{
+		textPaint.setTextAlign(Paint.Align.CENTER);
+		textPaint.setTextSize(30);
+		textPaint.setColor(Color.LTGRAY);
+		canvas.drawText("GAME PAUSED", (float) (getWidth() * 0.50), (float) (getHeight() * 0.50), textPaint);
 
 	}
 
@@ -392,59 +389,23 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		textPaint.setTextAlign(Paint.Align.LEFT);
 		textPaint.setTextSize(15);
+		textPaint.setColor(Color.BLACK);
 		canvas.drawText("Score: " + score, 1, 19, textPaint);
 	}
 
-	private void setGameOverState(Boolean gameOverState)
+	public void drawGameOverScreen(Canvas canvas)
 	{
-		this.gameOverState = gameOverState;
+		textPaint.setTextSize(40);
+		textPaint.setTextAlign(Paint.Align.CENTER);
+		textPaint.setColor(Color.LTGRAY);
+		canvas.drawText("GAME OVER", (float) (getWidth() * 0.50), (float) (getHeight() * 0.50), textPaint);
+		textPaint.setTextSize(25);
+		canvas.drawText("Your score: " + score, (float) (getWidth() * 0.50), (float) (getHeight() * 0.70), textPaint);
+		checkIfHighscore();
 	}
 
-	public Boolean getGameOverState()
+	private void checkIfHighscore()
 	{
-		return this.gameOverState;
-	}
-
-	public void drawGameOverScreen(Canvas canvas) throws ParserConfigurationException, SAXException, IOException
-	{
-		if (getGameOverState() == true)
-		{
-			textPaint.setTextSize(40);
-			textPaint.setTextAlign(Paint.Align.CENTER);
-			textPaint.setColor(Color.LTGRAY);
-			canvas.drawText("GAME OVER", (float) (getWidth() * 0.50), (float) (getHeight() * 0.50), textPaint);
-			textPaint.setTextSize(25);
-			canvas.drawText("Your score: " + score,
-							(float) (getWidth() * 0.50),
-							(float) (getHeight() * 0.70),
-							textPaint);
-			checkIfHighscore();
-		}
-	}
-
-	private void checkIfHighscore() throws ParserConfigurationException, SAXException, IOException
-	{
-		//TODO
-//		File fXmlFile = new File("D:/workspace/ProjectUnknown/res/values/strings.xml");
-//		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//		Document doc = dBuilder.parse(fXmlFile);
-//
-//		doc.getDocumentElement().normalize();
-//
-//		NodeList nList = doc.getElementsByTagName("string");
-//
-//		for (int x = 0; x < nList.getLength(); x++)
-//		{
-//			 
-//			if (nList.item(x).getAttributes().getNamedItem("name").getNodeValue() == "highscore_1")
-//			{
-//				String value = nList.item(x).getTextContent();
-//				if(Integer.parseInt(value) < score) {
-//					nList.item(x).setTextContent(String.valueOf(score));
-//				}
-//			}
-//		}
 
 	}
 

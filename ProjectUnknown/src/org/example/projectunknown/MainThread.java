@@ -1,22 +1,15 @@
 package org.example.projectunknown;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class MainThread extends Thread
 {
-
 	private static final String TAG = MainThread.class.getSimpleName();
 
 	// flag to hold game state
-	private boolean running;
+	public boolean running;
 
 	// private boolean paused;
 
@@ -42,6 +35,8 @@ public class MainThread extends Thread
 
 	private final static int FRAME_PERIOD = 1000 / MAX_FPS;
 
+	public static GameStates gameState;
+
 	@Override
 	public void run()
 	{
@@ -65,58 +60,108 @@ public class MainThread extends Thread
 				canvas = this.surfaceHolder.lockCanvas();
 				synchronized (surfaceHolder)
 				{
+
 					beginTime = System.currentTimeMillis();
 					framesSkipped = 0;
 
+					if (gameState == GameStates.RUNNING)
+					{
 						this.gamePanel.update();
 						this.gamePanel.render(canvas);
-					// calculate how long did the cycle take
-					timeDiff = System.currentTimeMillis() - beginTime;
-					// calculate sleep time
-					sleepTime = (int) (FRAME_PERIOD - timeDiff);
 
-					if (sleepTime > 0)
-					{
-						// if sleepTime > 0 we're OK
-						try
+						// calculate how long did the cycle take
+						timeDiff = System.currentTimeMillis() - beginTime;
+
+						// calculate sleep time
+						sleepTime = (int) (FRAME_PERIOD - timeDiff);
+
+						if (sleepTime > 0)
 						{
-							Thread.sleep(sleepTime);
+							// if sleepTime > 0 we're OK
+							try
+							{
+								Thread.sleep(sleepTime);
+							}
+							catch (InterruptedException e)
+							{
+							}
 						}
-						catch (InterruptedException e)
+
+						while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
 						{
+							// update without rendering
+							this.gamePanel.update();
+
+							// add frame period to check if in next frame
+							sleepTime += FRAME_PERIOD;
+							framesSkipped++;
 						}
 					}
-
-					while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
+					else if (gameState == GameStates.PAUSED)
 					{
-						// update without rendering
-						this.gamePanel.update();
+						this.gamePanel.render(canvas);
+						
+						// calculate how long did the cycle take
+						timeDiff = System.currentTimeMillis() - beginTime;
 
-						// add frame period to check if in next frame
-						sleepTime += FRAME_PERIOD;
-						framesSkipped++;
+						// calculate sleep time
+						sleepTime = (int) (FRAME_PERIOD - timeDiff);
+
+						if (sleepTime > 0)
+						{
+							// if sleepTime > 0 we're OK
+							try
+							{
+								Thread.sleep(sleepTime);
+							}
+							catch (InterruptedException e)
+							{
+							}
+						}
+
+						while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
+						{
+							// update without rendering
+							this.gamePanel.update();
+
+							// add frame period to check if in next frame
+							sleepTime += FRAME_PERIOD;
+							framesSkipped++;
+						}
+					} else if(gameState == GameStates.GAME_OVER) {
+
+						this.gamePanel.render(canvas);
+						
+						// calculate how long did the cycle take
+						timeDiff = System.currentTimeMillis() - beginTime;
+
+						// calculate sleep time
+						sleepTime = (int) (FRAME_PERIOD - timeDiff);
+
+						if (sleepTime > 0)
+						{
+							// if sleepTime > 0 we're OK
+							try
+							{
+								Thread.sleep(sleepTime);
+							}
+							catch (InterruptedException e)
+							{
+							}
+						}
+
+						while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
+						{
+							// update without rendering
+							this.gamePanel.update();
+
+							// add frame period to check if in next frame
+							sleepTime += FRAME_PERIOD;
+							framesSkipped++;
+						}
+					
 					}
 				}
-			}
-			catch (ParserConfigurationException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (SAXException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			finally
 			{

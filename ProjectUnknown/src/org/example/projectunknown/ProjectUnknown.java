@@ -2,11 +2,13 @@ package org.example.projectunknown;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +21,7 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	private static final String TAG = ProjectUnknown.class.getSimpleName();
 
-	MainGamePanel panel;
-
-	MainThread thread;
-
-	// private Boolean paused;
+	Intent p;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -53,6 +51,7 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 		View exitButton = this.findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
+
 	}
 
 	@Override
@@ -62,37 +61,36 @@ public class ProjectUnknown extends Activity implements OnClickListener
 		menu.add(0, 1, 0, R.string.pause_title);
 		menu.add(0, 2, 0, R.string.resume_title);
 		menu.add(0, 3, 0, R.string.main_menu_label);
-
 		return result;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-
 		switch (item.getItemId())
 		{
 			case 1:
 				Log.d(TAG, "Clicked on Pause Game button.");
-				openPauseGameDialog();
+				pauseGame();
 				return true;
 			case 2:
 				Log.d(TAG, "Clicked on Resume Game button.");
-				openResumeGameDialog();
+				resumeGame();
 				return true;
 			case 3:
+				// TODO
 				Log.d(TAG, "Clicked on Main Menu button.");
+				// MainGamePanel.thread.stop();
+				// setContentView(R.layout.activity_project_unknown);
 				return true;
 		}
 		return false;
 	}
 
-	// TODO
 	@Override
 	public void onBackPressed()
 	{
-
-		// panel.getThread().setRunning(false);
+		pauseGame();
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 		alertDialog.setTitle("Exit Alert");
 		alertDialog.setMessage("Do you really want to exit the Game?");
@@ -109,14 +107,11 @@ public class ProjectUnknown extends Activity implements OnClickListener
 			public void onClick(DialogInterface dialog, int which)
 			{
 				dialog.cancel();
-
-				// panel.getThread().resume();
-				// panel.getThread().setRunning(true);
+				resumeGame();
 				return;
 			}
 		});
 		alertDialog.show();
-
 	}
 
 	// GAME MENU SWITCH
@@ -125,27 +120,23 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	{
 		switch (v.getId())
 		{
-
 			case R.id.new_button:
 				Log.d(TAG, "Clicked on New Game button.");
 				openNewGameDialog();
 				break;
-
+			// TODO
 			case R.id.options_button:
 				Log.d(TAG, "Clicked on Options button.");
 				break;
-
 			case R.id.score_button:
 				Log.d(TAG, "Clicked on HighScore button.");
 				openHighscoresDialog();
 				break;
-
 			case R.id.about_button:
 				Log.d(TAG, "Clicked on About button.");
 				Intent i = new Intent(this, About.class);
 				startActivity(i);
 				break;
-
 			case R.id.exit_button:
 				Log.d(TAG, "Clicked on Exit button.");
 				finish();
@@ -157,23 +148,13 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	{
 
 		new AlertDialog.Builder(this).setTitle(R.string.high_score_label)
-										.setItems(R.array.highscores, new DialogInterface.OnClickListener()
-										{
-
-											public void onClick(DialogInterface dialoginterface, int i)
-											{
-												dialoginterface.cancel();
-												return;
-											}
-
-										})
+										.setMessage(String.valueOf(getPreferences()))
 										.show();
 	}
 
 	/** Ask the user what theme of the level they want */
 	private void openNewGameDialog()
 	{
-
 		new AlertDialog.Builder(this).setTitle(R.string.new_game_title)
 										.setItems(R.array.themes, new DialogInterface.OnClickListener()
 										{
@@ -188,41 +169,14 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	}
 
-	private void openPauseGameDialog()
+	protected void pauseGame()
 	{
-		new AlertDialog.Builder(this).setItems(R.array.pause, new DialogInterface.OnClickListener()
-		{
-
-			public void onClick(DialogInterface dialoginterface, int p)
-			{
-				pauseGame(p);
-			}
-
-		}).show();
+		MainThread.gameState = GameStates.PAUSED;
 	}
 
-	// TODO
-	protected void pauseGame(int p)
-	{
-		Log.d(TAG, "clicked on " + p);
-
-		// panel.getThread().setRunning(false);
-
-	}
-
-	private void openResumeGameDialog()
-	{
-		resumeGame();
-	}
-
-	// TODO
 	protected void resumeGame()
 	{
-		Log.d(TAG, "clicked on " + "resume game");
-
-		// panel.getThread().resume();
-		// panel.getThread().setRunning(true);
-
+		MainThread.gameState = GameStates.RUNNING;
 	}
 
 	/** Start a new game with the given theme of the level */
@@ -230,9 +184,6 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	{
 		Log.d(TAG, "clicked on " + i);
 		// Start game here...
-
-		setContentView(R.layout.start_game);
-		Log.d(TAG, "start_game layout");
 
 		setContentView(new MainGamePanel(this));
 		Log.d(TAG, "MainGamePanel");
@@ -251,6 +202,29 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	{
 		Log.d(TAG, "Stopping...");
 		super.onStop();
+	}
+
+	// TODO
+	public void setPreferences()
+	{
+		// setting preferences
+		SharedPreferences prefs = this.getSharedPreferences("ProjectUnknown", Context.MODE_PRIVATE);
+		int score = prefs.getInt("highscore", 0);
+		if (score < MainGamePanel.score)
+		{
+			Editor editor = prefs.edit();
+			editor.putInt("highscore", MainGamePanel.score);
+			editor.commit();
+		}
+
+	}
+
+	public int getPreferences()
+	{
+		// getting preferences
+		SharedPreferences prefs = this.getSharedPreferences("ProjectUnknown", Context.MODE_PRIVATE);
+		int score = prefs.getInt("highscore", 0); // 0 is the default value
+		return score;
 	}
 
 }
