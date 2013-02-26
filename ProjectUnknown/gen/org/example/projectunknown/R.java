@@ -9,15 +9,14 @@ package org.example.projectunknown;
 
 public final class R {
     public static final class array {
-        public static final int highscores=0x7f040001;
-        public static final int pause=0x7f040002;
-        public static final int resume=0x7f040003;
-        public static final int themes=0x7f040000;
+        public static final int pause=0x7f050001;
+        public static final int resume=0x7f050002;
+        public static final int themes=0x7f050000;
     }
     public static final class attr {
     }
     public static final class color {
-        public static final int background=0x7f050000;
+        public static final int background=0x7f060000;
     }
     public static final class drawable {
         public static final int floor=0x7f020000;
@@ -25,45 +24,50 @@ public final class R {
         public static final int smiley=0x7f020002;
     }
     public static final class id {
-        public static final int about_button=0x7f090004;
-        public static final int about_content=0x7f090000;
-        public static final int exit_button=0x7f090005;
-        public static final int new_button=0x7f090001;
-        public static final int options_button=0x7f090002;
-        public static final int score_button=0x7f090003;
+        public static final int about_button=0x7f0a0004;
+        public static final int about_content=0x7f0a0000;
+        public static final int exit_button=0x7f0a0005;
+        public static final int music=0x7f0a0006;
+        public static final int new_button=0x7f0a0001;
+        public static final int options_button=0x7f0a0002;
+        public static final int score_button=0x7f0a0003;
+        public static final int sounds=0x7f0a0007;
     }
     public static final class layout {
         public static final int about=0x7f030000;
         public static final int activity_project_unknown=0x7f030001;
+        public static final int options=0x7f030002;
     }
     public static final class menu {
-        public static final int activity_project_unknown=0x7f080000;
+        public static final int activity_project_unknown=0x7f090000;
+    }
+    public static final class raw {
+        public static final int supermario=0x7f040000;
     }
     public static final class string {
-        public static final int about_label=0x7f060007;
-        public static final int about_text=0x7f060006;
-        public static final int about_title=0x7f060002;
-        public static final int app_name=0x7f060000;
-        public static final int exit_game_label=0x7f06000f;
-        public static final int exit_label=0x7f06000b;
-        public static final int game_theme_1_label=0x7f060010;
-        public static final int game_theme_2_label=0x7f060011;
-        public static final int game_theme_3_label=0x7f060012;
-        public static final int high_score_label=0x7f06000a;
-        public static final int highscore_1=0x7f060013;
-        public static final int highscore_2=0x7f060014;
-        public static final int highscore_3=0x7f060015;
-        public static final int highscore_4=0x7f060016;
-        public static final int highscore_5=0x7f060017;
-        public static final int main_menu_label=0x7f06000e;
-        public static final int main_title=0x7f060001;
-        public static final int new_game_label=0x7f060009;
-        public static final int new_game_title=0x7f060005;
-        public static final int options_label=0x7f060008;
-        public static final int pause_game_label=0x7f06000c;
-        public static final int pause_title=0x7f060003;
-        public static final int resume_game_label=0x7f06000d;
-        public static final int resume_title=0x7f060004;
+        public static final int about_label=0x7f070009;
+        public static final int about_text=0x7f070008;
+        public static final int about_title=0x7f070003;
+        public static final int app_name=0x7f070000;
+        public static final int exit_label=0x7f070011;
+        public static final int game_theme_1_label=0x7f070014;
+        public static final int game_theme_2_label=0x7f070015;
+        public static final int game_theme_3_label=0x7f070016;
+        public static final int game_title=0x7f070002;
+        public static final int high_score_label=0x7f070010;
+        public static final int main_title=0x7f070001;
+        public static final int music_summary=0x7f07000c;
+        public static final int music_title=0x7f07000b;
+        public static final int new_game_label=0x7f07000f;
+        public static final int new_game_title=0x7f070007;
+        public static final int options_label=0x7f07000a;
+        public static final int options_title=0x7f070004;
+        public static final int pause_game_label=0x7f070012;
+        public static final int pause_title=0x7f070005;
+        public static final int resume_game_label=0x7f070013;
+        public static final int resume_title=0x7f070006;
+        public static final int sounds_summary=0x7f07000e;
+        public static final int sounds_title=0x7f07000d;
     }
     public static final class style {
         /** 
@@ -76,10 +80,10 @@ public final class R {
             backward-compatibility can go here.
         
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f080001;
     }
 }

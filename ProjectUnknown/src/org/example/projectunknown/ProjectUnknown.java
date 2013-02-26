@@ -1,16 +1,17 @@
 package org.example.projectunknown;
 
+import org.example.projectunknown.menuscreens.About;
+import org.example.projectunknown.menuscreens.Options;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -21,8 +22,10 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	private static final String TAG = ProjectUnknown.class.getSimpleName();
 
-	Intent p;
-
+	public static MediaPlayer mp;
+	
+	public static Context context;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -52,66 +55,11 @@ public class ProjectUnknown extends Activity implements OnClickListener
 		View exitButton = this.findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
 
-	}
+		// Native rate is 44.1kHz 16 bit stereo, but
+		// to save space we just use MPEG-3 22kHz mono
+		
+		Music.play(this, R.raw.supermario);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		boolean result = super.onCreateOptionsMenu(menu);
-		menu.add(0, 1, 0, R.string.pause_title);
-		menu.add(0, 2, 0, R.string.resume_title);
-		menu.add(0, 3, 0, R.string.main_menu_label);
-		return result;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case 1:
-				Log.d(TAG, "Clicked on Pause Game button.");
-				pauseGame();
-				return true;
-			case 2:
-				Log.d(TAG, "Clicked on Resume Game button.");
-				resumeGame();
-				return true;
-			case 3:
-				// TODO
-				Log.d(TAG, "Clicked on Main Menu button.");
-				// MainGamePanel.thread.stop();
-				// setContentView(R.layout.activity_project_unknown);
-				return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		pauseGame();
-		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setTitle("Exit Alert");
-		alertDialog.setMessage("Do you really want to exit the Game?");
-		alertDialog.setButton("Yes", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int which)
-			{
-				android.os.Process.killProcess(android.os.Process.myPid());
-				return;
-			}
-		});
-		alertDialog.setButton2("No", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.cancel();
-				resumeGame();
-				return;
-			}
-		});
-		alertDialog.show();
 	}
 
 	// GAME MENU SWITCH
@@ -127,6 +75,8 @@ public class ProjectUnknown extends Activity implements OnClickListener
 			// TODO
 			case R.id.options_button:
 				Log.d(TAG, "Clicked on Options button.");
+				Intent o = new Intent(this, Options.class);
+				startActivity(o);
 				break;
 			case R.id.score_button:
 				Log.d(TAG, "Clicked on HighScore button.");
@@ -161,7 +111,10 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 											public void onClick(DialogInterface dialoginterface, int i)
 											{
-												startGame(i);
+												if (i == 1)
+												{
+													startGame(i);
+												}
 											}
 
 										})
@@ -169,31 +122,19 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	}
 
-	protected void pauseGame()
-	{
-		MainThread.gameState = GameStates.PAUSED;
-	}
-
-	protected void resumeGame()
-	{
-		MainThread.gameState = GameStates.RUNNING;
-	}
-
 	/** Start a new game with the given theme of the level */
 	private void startGame(int i)
 	{
 		Log.d(TAG, "clicked on " + i);
-		// Start game here...
-
-		setContentView(new MainGamePanel(this));
-		Log.d(TAG, "MainGamePanel");
-
+		Intent p = new Intent(this, Game.class);
+		startActivity(p);
 	}
 
 	@Override
 	protected void onDestroy()
 	{
 		Log.d(TAG, "Destroying...");
+		Music.stop(this);
 		super.onDestroy();
 	}
 
@@ -202,21 +143,6 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	{
 		Log.d(TAG, "Stopping...");
 		super.onStop();
-	}
-
-	// TODO
-	public void setPreferences()
-	{
-		// setting preferences
-		SharedPreferences prefs = this.getSharedPreferences("ProjectUnknown", Context.MODE_PRIVATE);
-		int score = prefs.getInt("highscore", 0);
-		if (score < MainGamePanel.score)
-		{
-			Editor editor = prefs.edit();
-			editor.putInt("highscore", MainGamePanel.score);
-			editor.commit();
-		}
-
 	}
 
 	public int getPreferences()

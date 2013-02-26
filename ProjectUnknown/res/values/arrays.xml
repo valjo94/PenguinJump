@@ -6,13 +6,6 @@
         <item>@string/game_theme_2_label</item>
         <item>@string/game_theme_3_label</item>
     </array>
-    <array name="highscores">
-        <item>@string/highscore_1</item>
-        <item>@string/highscore_2</item>
-        <item>@string/highscore_3</item>
-        <item>@string/highscore_4</item>
-        <item>@string/highscore_5</item>
-    </array>
     <array name="pause">
         <item>@string/pause_game_label</item>
     </array>

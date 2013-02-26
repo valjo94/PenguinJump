@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="first_preferencescreen" >
+
+    <CheckBoxPreference
+        android:id="@+id/music"
+        android:defaultValue="true"
+        android:summary="@string/music_summary"
+        android:title="@string/music_title" />
+    <CheckBoxPreference
+        android:id="@+id/sounds"
+        android:defaultValue="true"
+        android:summary="@string/sounds_summary"
+        android:title="@string/sounds_title">
+    </CheckBoxPreference>
+
+</PreferenceScreen>
