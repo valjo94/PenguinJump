@@ -19,19 +19,27 @@ public final class R {
         public static final int background=0x7f060000;
     }
     public static final class drawable {
-        public static final int floor=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int smiley=0x7f020002;
+        public static final int ic_launcher=0x7f020000;
+        public static final int ice_bg=0x7f020001;
+        public static final int ice_block=0x7f020002;
+        public static final int nature_bg=0x7f020003;
+        public static final int nature_block=0x7f020004;
+        public static final int penguin_black=0x7f020005;
+        public static final int penguin_blue=0x7f020006;
+        public static final int penguin_green=0x7f020007;
+        public static final int penguin_red=0x7f020008;
+        public static final int space_bg=0x7f020009;
+        public static final int space_block=0x7f02000a;
     }
     public static final class id {
         public static final int about_button=0x7f0a0004;
         public static final int about_content=0x7f0a0000;
         public static final int exit_button=0x7f0a0005;
-        public static final int music=0x7f0a0006;
+        public static final int music_button=0x7f0a0006;
         public static final int new_button=0x7f0a0001;
         public static final int options_button=0x7f0a0002;
         public static final int score_button=0x7f0a0003;
-        public static final int sounds=0x7f0a0007;
+        public static final int sounds_button=0x7f0a0007;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -42,13 +50,16 @@ public final class R {
         public static final int activity_project_unknown=0x7f090000;
     }
     public static final class raw {
-        public static final int supermario=0x7f040000;
+        public static final int gameover=0x7f040000;
+        public static final int lame=0x7f040001;
+        public static final int supermario=0x7f040002;
     }
     public static final class string {
         public static final int about_label=0x7f070009;
         public static final int about_text=0x7f070008;
         public static final int about_title=0x7f070003;
         public static final int app_name=0x7f070000;
+        public static final int checkbox=0x7f070017;
         public static final int exit_label=0x7f070011;
         public static final int game_theme_1_label=0x7f070014;
         public static final int game_theme_2_label=0x7f070015;

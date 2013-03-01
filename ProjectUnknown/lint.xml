@@ -6,4 +6,5 @@
     <issue id="TypographyEllipsis">
         <ignore path="res\values\strings.xml" />
     </issue>
+    <issue id="ViewConstructor" severity="ignore" />
 </lint>

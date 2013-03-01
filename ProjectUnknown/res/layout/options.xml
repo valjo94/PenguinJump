@@ -1,16 +1,37 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="first_preferencescreen" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="30dip" >
 
-    <CheckBoxPreference
-        android:id="@+id/music"
-        android:defaultValue="true"
-        android:summary="@string/music_summary"
-        android:title="@string/music_title" />
-    <CheckBoxPreference
-        android:id="@+id/sounds"
-        android:defaultValue="true"
-        android:summary="@string/sounds_summary"
-        android:title="@string/sounds_title">
-    </CheckBoxPreference>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="80dip"
+        android:text="@string/options_title"
+        android:textSize="24.5sp" />
 
-</PreferenceScreen>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent" >
+
+        <Button
+            android:id="@+id/music_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music_title" />
+
+        <Button
+            android:id="@+id/sounds_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sounds_title" />
+    </LinearLayout>
+
+</LinearLayout>

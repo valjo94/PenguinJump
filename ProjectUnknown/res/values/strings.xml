@@ -28,8 +28,9 @@
     <string name="exit_label">Exit</string>
     <string name="pause_game_label">Game Paused</string>
     <string name="resume_game_label">Game Resumed</string>
-    <string name="game_theme_1_label">Solid</string>
+    <string name="game_theme_1_label">Space</string>
     <string name="game_theme_2_label">Ice</string>
     <string name="game_theme_3_label">Nature</string>
+    <string name="checkbox">CheckBox</string>
 
 </resources>

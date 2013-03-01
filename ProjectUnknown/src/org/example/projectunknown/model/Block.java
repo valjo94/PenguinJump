@@ -1,8 +1,6 @@
 package org.example.projectunknown.model;
 
-import org.example.projectunknown.MainGamePanel;
 import org.example.projectunknown.model.components.Velocity;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
@@ -19,17 +17,11 @@ public class Block
 
 	private float y; // the Y coordinate
 
-	int type;
-
-	int state;
-
 	float stateTime;
 
 	private Velocity velocity;
 
 	private int blockType = BLOCK_TYPE_NORMAL;
-
-	MainGamePanel panel;
 
 	public Block(Bitmap bitmap, float startPointX, float startPointY)
 	{
