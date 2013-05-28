@@ -1,9 +1,12 @@
 package org.example.projectunknown.model;
 
+import org.example.projectunknown.gamelogic.MainGamePanel;
 import org.example.projectunknown.model.components.Velocity;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 public class PlayerHero
 {
@@ -19,6 +22,8 @@ public class PlayerHero
 	private Velocity velocity; // the speed with its directions
 
 	private float destinationY; // the destination Y coordinate
+
+	private float scale = MainGamePanel.scale;
 
 	public PlayerHero(Bitmap bitmap, int x, int y)
 	{
@@ -82,9 +87,9 @@ public class PlayerHero
 
 	public void draw(Canvas canvas)
 	{
-
-		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
-
+		Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth()*scale), (int)(bitmap.getHeight()*scale), true);
+		canvas.drawBitmap(resized, x - (resized.getWidth() / 2), y - (resized.getHeight() / 2), null);
+		
 	}
 
 	/**

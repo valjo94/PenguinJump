@@ -16,7 +16,9 @@
         <activity
             android:name="org.example.projectunknown.gameactivities.ProjectUnknown"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:launchMode="singleTask" 
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,17 +27,20 @@
         <activity
             android:name="org.example.projectunknown.gameactivities.About"
             android:label="@string/about_title"
-            android:theme="@android:style/Theme.Dialog" >
+            android:theme="@android:style/Theme.Dialog" 
+            android:clearTaskOnLaunch="true">
         </activity>
         <activity
             android:name="org.example.projectunknown.gameactivities.Options"
             android:label="@string/options_title" 
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true">
         </activity>
         <activity
             android:name="org.example.projectunknown.gameactivities.Game"
             android:label="@string/game_title"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true" >
         </activity>
     </application>
 

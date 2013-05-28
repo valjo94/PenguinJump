@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Project Unknown</string>
-    <string name="main_title">Project Unknown</string>
+    <string name="app_name">Penguin Jump</string>
+    <string name="main_title">Penguin Jump</string>
     <string name="game_title">Game</string>
-    <string name="about_title">About Project Unknown</string>
+    <string name="about_title">About Penguin Jump</string>
     <string name="options_title">Options</string>
     <string name="pause_title">Pause Game</string>
     <string name="resume_title">Resume Game</string>
     <string name="new_game_title">Themes</string>
-    <string name="about_text">		Project Unknown is an arcade game.Your purpose 
-		in the game is to get the best score that you can
-		by going through the game.Getting higher and higher,
-		the blocks start moving faster and more obsticles appear.
-		This is my first game so I hope that you like it. \n\n\n\n\n
+    <string name="about_text">\n\n\nPenguin Jump is an interesting platform game game.
+        The target of the game is to be funny, amusing and easy to play.\n
+		The gameplay is very simple - you choose a stage and you navigate your penguin
+		through the floors by tilting the phone left and right.\n Getting higher and higher,
+		the blocks start moving faster and more enemies appear.\n
+		Tell your friends about the game and compare your scores!
+		This is my first game so don\'t judge me if you don\'t like it.
+		I hope you have fun.\n\n
 		
 		Copyright by Valentin Dimitrov (studied software engineering
 		 in TUES-Bulgaria.)</string>

@@ -26,10 +26,11 @@ public final class R {
         public static final int nature_block=0x7f020004;
         public static final int penguin_black=0x7f020005;
         public static final int penguin_blue=0x7f020006;
-        public static final int penguin_green=0x7f020007;
-        public static final int penguin_red=0x7f020008;
-        public static final int space_bg=0x7f020009;
-        public static final int space_block=0x7f02000a;
+        public static final int penguin_blue1=0x7f020007;
+        public static final int penguin_green=0x7f020008;
+        public static final int penguin_red=0x7f020009;
+        public static final int space_bg=0x7f02000a;
+        public static final int space_block=0x7f02000b;
     }
     public static final class id {
         public static final int about_button=0x7f0a0004;

@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
 import org.example.projectunknown.R;
+import org.example.projectunknown.gameactivities.Game;
+import org.example.projectunknown.gameactivities.ProjectUnknown;
 import org.example.projectunknown.model.Block;
 import org.example.projectunknown.model.Enemy;
 import org.example.projectunknown.model.PlayerHero;
 import org.example.projectunknown.model.components.Velocity;
+
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,66 +39,53 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private static final float COLLISION_UP = 70;
 
 	private MainThread thread;
-
 	private PlayerHero hero;
-
 	private Paint textPaint;
+	private Enemy enemy;
 
 	// Blocks variables
 	private Block block;
-
 	private List<Block> blockList = new ArrayList<Block>();
-
 	private List<Float> array = new ArrayList<Float>();
-
 	private final float BLOCK_Y = 310;
 
 	float blockX;
-
 	float newBlockX;
-
 	float currentY;
 
 	private int blockType;
 
 	// Sensors data arrays
 	private SensorManager mSensorManager;
-
 	private float[] mAccelerometerReading;
-
 	private float[] mMagneticFieldReading;
-
 	private float[] mRotationMatrix = new float[16];
-
 	private float[] mRemapedRotationMatrix = new float[16];
-
 	public float[] mOrientation = new float[3];
-
 	private Random rand = new Random();
 
 	public static int score = 0;
 
-	private long beginTime;
-
+	public long beginTime;
 	public static long currentTime;
 
-	private long timeCount;
+	public static final float scale = 1.0f;
 
-	private Enemy enemy;
+	long timeCount;
 
-	private int random;
-
+	int random;
 	int blockSkin;
-
 	int heroSkin;
 
-	private int background;
+	int background;
 
-	Bitmap bgPic;
+	private Bitmap bgPic;
 
-	Matrix matrix;
+	private Matrix matrix;
 
 	private int textColor;
+
+	private Game game;
 
 	public MainGamePanel(Context context, int theme)
 	{
@@ -107,26 +100,24 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			case 0:
 				Log.d(TAG, "Loading Space skins.");
 				blockSkin = R.drawable.space_block;
-				heroSkin = R.drawable.penguin_red;
 				background = R.drawable.space_bg;
 				textColor = Color.LTGRAY;
 				break;
 			case 1:
 				Log.d(TAG, "Loading Ice skins.");
 				blockSkin = R.drawable.ice_block;
-				heroSkin = R.drawable.penguin_blue;
 				background = R.drawable.ice_bg;
 				textColor = Color.BLACK;
 				break;
 			case 2:
 				Log.d(TAG, "Loading Nature skins.");
 				blockSkin = R.drawable.nature_block;
-				heroSkin = R.drawable.penguin_green;
 				background = R.drawable.nature_bg;
 				textColor = Color.BLACK;
 				break;
 		}
-
+		heroSkin = R.drawable.penguin_blue;
+		
 		bgPic = BitmapFactory.decodeResource(getResources(), background);
 		matrix = new Matrix();
 		matrix.postScale(1.4f, 1.4f);
@@ -143,9 +134,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		}
 
 		// Creating the player.
-
 		hero = new PlayerHero(BitmapFactory.decodeResource(getResources(), heroSkin), 120, 310);
-
+		
 		// Creating Texts.
 		textPaint = new Paint();
 
@@ -157,7 +147,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		getSensorData(context);
 
 	}
-
+	
 	// Method for landscape view - Don't touch
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
@@ -177,7 +167,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	public void surfaceDestroyed(SurfaceHolder holder)
 	{
 		Log.d(TAG, "The surface is being destroyed..");
-
 		// tell the thread to shut down and wait for it to finish
 		boolean retry = true;
 
@@ -188,8 +177,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 				getThread().join();
 				retry = false;
 				Log.d(TAG, "Thread was shut down cleanly.");
-			}
-			catch (InterruptedException e)
+			} catch (InterruptedException e)
 			{
 				// try again shutting down the thread
 				Log.d(TAG, "Thread could not shut down cleanly.");
@@ -204,7 +192,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
-
+			if (MainThread.gameState == GameStates.GAME_OVER)
+			{
+				android.os.Process.killProcess(android.os.Process.myPid());				
+			}
 			Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
 		}
 
@@ -246,7 +237,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	}
 
-	public void update()
+	protected void update()
 	{
 		if (hero.getY() <= 320)
 
@@ -274,8 +265,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 				if (currentTime <= 5000)
 				{
 					hero.getVelocity().toggleYDirection();
-				}
-				else
+				} else
 				{
 					MainThread.gameState = GameStates.GAME_OVER;
 				}
@@ -294,11 +284,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			{
 				for (int i = 0; i < blockList.size(); i++)
 				{
-					if (hero.getY() + heroHeight() >= blockList.get(i).getY()
-							&& hero.getY() + heroHeight() <= blockList.get(i).getY()
+					if (hero.getY() + heroHeight()/2 >= blockList.get(i).getY() - blockList.get(i).getBitmap().getHeight()/2
+							&& hero.getY() + heroHeight()/2 <= blockList.get(i).getY()
 									+ blockList.get(i).getBitmap().getHeight() / 2
-							&& hero.getX() >= blockList.get(i).getX() - blockList.get(i).getBitmap().getWidth() / 2
-							&& hero.getX() <= blockList.get(i).getX() + blockList.get(i).getBitmap().getWidth() / 2)
+							&& hero.getX() + hero.getBitmap().getWidth()/2 >= blockList.get(i).getX() - blockList.get(i).getBitmap().getWidth() / 2
+							&& hero.getX() - hero.getBitmap().getWidth()/2 <= blockList.get(i).getX() + blockList.get(i).getBitmap().getWidth() / 2)
 					{
 
 						hero.getVelocity().toggleYDirection();
@@ -481,10 +471,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		{
 			it.next().draw(canvas);
 		}
+
 		if (enemy != null)
 		{
 			enemy.draw(canvas);
 		}
+		
 		hero.draw(canvas);
 		drawScore(canvas);
 
@@ -492,6 +484,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		{
 			drawPaused(canvas);
 		}
+
 		if (MainThread.gameState == GameStates.GAME_OVER)
 		{
 			drawGameOverScreen(canvas);
@@ -523,12 +516,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		textPaint.setColor(Color.LTGRAY);
 		canvas.drawText("GAME OVER", (float) (getWidth() * 0.50), (float) (getHeight() * 0.50), textPaint);
 		textPaint.setTextSize(25);
-		canvas.drawText("Your score: " + score, (float) (getWidth() * 0.50), (float) (getHeight() * 0.70), textPaint);
+		canvas.drawText("Your score is: " + score, (float) (getWidth() * 0.50), (float) (getHeight() * 0.70), textPaint);
 	}
 
 	private void getSensorData(Context context)
 	{
-
 		// Getting Sensor info
 		mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 		mSensorManager.registerListener(this,

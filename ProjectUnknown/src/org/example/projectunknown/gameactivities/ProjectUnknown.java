@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -24,6 +25,8 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	public static SharedPreferences prefSounds;
 
+	private Game game;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -57,7 +60,7 @@ public class ProjectUnknown extends Activity implements OnClickListener
 		prefSounds = this.getSharedPreferences("SOUNDS", Context.MODE_PRIVATE);
 
 	}
-
+	
 	// GAME MENU SWITCH
 	@Override
 	public void onClick(View v)
@@ -91,14 +94,13 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	private void openHighscoresDialog()
 	{
-
 		new AlertDialog.Builder(this).setTitle(R.string.high_score_label)
 										.setMessage(String.valueOf(getPreferences()))
 										.show();
 	}
 
 	/** Ask the user what theme of the level they want */
-	private void openNewGameDialog()
+	public void openNewGameDialog()
 	{
 		new AlertDialog.Builder(this).setTitle(R.string.new_game_title)
 										.setItems(R.array.themes, new DialogInterface.OnClickListener()
@@ -133,15 +135,14 @@ public class ProjectUnknown extends Activity implements OnClickListener
 	@Override
 	protected void onStop()
 	{
-		Log.d(TAG, "Stopping...");
+		Log.d(TAG, "Stopping main activity...");
 		super.onStop();
 	}
 
 	public int getPreferences()
 	{
-		// getting preferences
 		SharedPreferences prefs = this.getSharedPreferences("ProjectUnknown", Context.MODE_PRIVATE);
-		int score = prefs.getInt("highscore", 0); // 0 is the default value
+		int score = prefs.getInt("highscore", 0);
 		return score;
 	}
 

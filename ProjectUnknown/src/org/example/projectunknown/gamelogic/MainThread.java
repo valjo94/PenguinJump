@@ -1,10 +1,10 @@
 package org.example.projectunknown.gamelogic;
 
 import org.example.projectunknown.R;
+import org.example.projectunknown.gameactivities.Game;
 import org.example.projectunknown.gameactivities.ProjectUnknown;
 import org.example.projectunknown.media.Music;
 import android.content.Context;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -26,6 +26,8 @@ public class MainThread extends Thread
 	private SurfaceHolder surfaceHolder;
 
 	private MainGamePanel gamePanel;
+
+	private Game game;
 
 	public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel)
 	{
@@ -132,7 +134,7 @@ public class MainThread extends Thread
 						while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
 						{
 							// update without rendering
-							this.gamePanel.update();
+							// this.gamePanel.update();
 
 							// add frame period to check if in next frame
 							sleepTime += FRAME_PERIOD;

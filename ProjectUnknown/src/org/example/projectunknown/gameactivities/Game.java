@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -35,14 +36,17 @@ public class Game extends Activity
 
 		Bundle bundle = getIntent().getExtras();
 		theme = bundle.getInt("Theme");
+		
 
 		setContentView(new MainGamePanel(this, theme));
+		
 
 		// Native rate is 44.1kHz 16 bit stereo, but to save space we just use MPEG-3 22kHz mono
 		if (ProjectUnknown.prefMusic.getBoolean("MUSIC", false) == true)
 		{
 			Music.play(this, R.raw.supermario);
 		}
+		
 		Log.d(TAG, "Game Activity");
 	}
 
@@ -73,7 +77,7 @@ public class Game extends Activity
 		});
 		alertDialog.show();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -115,6 +119,11 @@ public class Game extends Activity
 			MainThread.gameState = GameStates.RUNNING;
 		}
 
+	}
+	
+	public void clickOnScreen() {
+		setPreferences(MainGamePanel.score);
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	public void setPreferences(int currentScore)
