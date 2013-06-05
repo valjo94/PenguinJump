@@ -5,21 +5,21 @@ import org.example.projectunknown.model.components.Velocity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class Block
+public class Coin
 {
 
-	public static final int BLOCK_TYPE_MOVING = 1;
+	public static final int COIN_TYPE_NORMAL = 1;
 
-	private static final int BLOCK_TYPE_NORMAL = 0;
+	public static final int COIN_TYPE_SPECIAL = 0;
 
 	private Bitmap bitmap; // the actual bitmap
 	private Velocity velocity;
 
 	private float x; // the X coordinate
 	private float y; // the Y coordinate
-	private int blockType = BLOCK_TYPE_NORMAL;
+	private int coinType = COIN_TYPE_NORMAL;
 
-	public Block(Bitmap bitmap, float startPointX, float startPointY)
+	public Coin(Bitmap bitmap, float startPointX, float startPointY)
 	{
 		this.bitmap = bitmap;
 		this.x = startPointX;
@@ -37,14 +37,14 @@ public class Block
 		this.bitmap = bitmap;
 	}
 
-	public void setType(int blockType)
+	public void setType(int coinType)
 	{
-		this.blockType = blockType;
+		this.coinType = coinType;
 	}
 
 	public int getType()
 	{
-		return blockType;
+		return coinType;
 	}
 
 	public float getX()
@@ -89,12 +89,6 @@ public class Block
 	// Blocks movement
 	public void update()
 	{
-
-		if (blockType == BLOCK_TYPE_MOVING)
-		{
-			x += (velocity.getXv() * velocity.getxDirection());
-
-		}
 	}
 
 }

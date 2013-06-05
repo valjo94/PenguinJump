@@ -4,9 +4,7 @@ import org.example.projectunknown.gamelogic.MainGamePanel;
 import org.example.projectunknown.model.components.Velocity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 
 public class PlayerHero
 {
@@ -23,14 +21,12 @@ public class PlayerHero
 
 	private float destinationY; // the destination Y coordinate
 
-	private float scale = MainGamePanel.scale;
-
 	public PlayerHero(Bitmap bitmap, int x, int y)
 	{
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
-		this.velocity = new Velocity(0f, 130f, 0f, 4.5f); // xv, yv, sx , sy
+		this.velocity = new Velocity(0f, 100f, 0f, 3f); // xv, yv, sx , sy
 		this.destinationY = this.y + (this.velocity.getYv() * this.velocity.getyDirection());
 
 	}
@@ -87,9 +83,11 @@ public class PlayerHero
 
 	public void draw(Canvas canvas)
 	{
-		Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth()*scale), (int)(bitmap.getHeight()*scale), true);
+		Bitmap resized = Bitmap.createScaledBitmap(	bitmap,
+													(int) (bitmap.getWidth() * MainGamePanel.density),
+													(int) (bitmap.getHeight() * MainGamePanel.density),
+													true);
 		canvas.drawBitmap(resized, x - (resized.getWidth() / 2), y - (resized.getHeight() / 2), null);
-		
 	}
 
 	/**
@@ -110,8 +108,7 @@ public class PlayerHero
 				if (velocity.getSx() < 0)
 				{
 					velocity.setxDirection(Velocity.DIRECTION_LEFT);
-				}
-				else
+				} else
 				{
 					velocity.setxDirection(Velocity.DIRECTION_RIGHT);
 				}
@@ -124,12 +121,10 @@ public class PlayerHero
 			if (this.getY() > this.destinationY && this.velocity.getyDirection() == Velocity.DIRECTION_UP)
 			{
 				y += (this.velocity.getSy() * this.velocity.getyDirection());
-			}
-			else if (this.velocity.getyDirection() == Velocity.DIRECTION_UP && this.getY() <= this.destinationY)
+			} else if (this.velocity.getyDirection() == Velocity.DIRECTION_UP && this.getY() <= this.destinationY)
 			{
 				velocity.toggleYDirection();
-			}
-			else if (this.velocity.getyDirection() == Velocity.DIRECTION_DOWN)
+			} else if (this.velocity.getyDirection() == Velocity.DIRECTION_DOWN)
 			{
 				y += (this.velocity.getSy() * this.velocity.getyDirection());
 			}

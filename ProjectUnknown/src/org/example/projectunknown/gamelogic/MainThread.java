@@ -1,9 +1,9 @@
 package org.example.projectunknown.gamelogic;
 
 import org.example.projectunknown.R;
-import org.example.projectunknown.gameactivities.Game;
 import org.example.projectunknown.gameactivities.ProjectUnknown;
 import org.example.projectunknown.media.Music;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.media.MediaPlayer;
@@ -26,8 +26,6 @@ public class MainThread extends Thread
 	private SurfaceHolder surfaceHolder;
 
 	private MainGamePanel gamePanel;
-
-	private Game game;
 
 	public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel)
 	{

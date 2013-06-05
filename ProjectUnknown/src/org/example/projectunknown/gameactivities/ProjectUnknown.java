@@ -2,6 +2,7 @@ package org.example.projectunknown.gameactivities;
 
 import org.example.projectunknown.R;
 import org.example.projectunknown.media.Music;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -25,8 +25,6 @@ public class ProjectUnknown extends Activity implements OnClickListener
 
 	public static SharedPreferences prefSounds;
 
-	private Game game;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

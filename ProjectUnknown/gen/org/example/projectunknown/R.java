@@ -19,18 +19,21 @@ public final class R {
         public static final int background=0x7f060000;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ice_bg=0x7f020001;
-        public static final int ice_block=0x7f020002;
-        public static final int nature_bg=0x7f020003;
-        public static final int nature_block=0x7f020004;
-        public static final int penguin_black=0x7f020005;
-        public static final int penguin_blue=0x7f020006;
-        public static final int penguin_blue1=0x7f020007;
-        public static final int penguin_green=0x7f020008;
-        public static final int penguin_red=0x7f020009;
-        public static final int space_bg=0x7f02000a;
-        public static final int space_block=0x7f02000b;
+        public static final int artifact=0x7f020000;
+        public static final int asteroid=0x7f020001;
+        public static final int banana=0x7f020002;
+        public static final int bear=0x7f020003;
+        public static final int fish=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int ice_bg=0x7f020006;
+        public static final int ice_block=0x7f020007;
+        public static final int nature_bg=0x7f020008;
+        public static final int nature_block=0x7f020009;
+        public static final int penguin_blue=0x7f02000a;
+        public static final int shark=0x7f02000b;
+        public static final int space_bg=0x7f02000c;
+        public static final int space_block=0x7f02000d;
+        public static final int star2=0x7f02000e;
     }
     public static final class id {
         public static final int about_button=0x7f0a0004;
