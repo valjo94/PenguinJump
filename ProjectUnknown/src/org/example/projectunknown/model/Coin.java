@@ -37,9 +37,9 @@ public class Coin
 		this.bitmap = bitmap;
 	}
 
-	public void setType(int coinType)
+	public void setType(int blockType)
 	{
-		this.coinType = coinType;
+		this.coinType = blockType;
 	}
 
 	public int getType()

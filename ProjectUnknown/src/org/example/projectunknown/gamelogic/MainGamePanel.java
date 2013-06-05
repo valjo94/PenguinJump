@@ -323,9 +323,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 																															.getBitmap()
 																															.getWidth() / 2)))
 					{
-						if (ProjectUnknown.prefSounds.getBoolean("SOUNDS", false) == true)
+						if (ProjectUnknown.prefMusic.getBoolean("SOUNDS", false) == true)
 						{
-							MediaPlayer.create(this.getContext(), R.raw.lame).start();
+							MediaPlayer.create(getContext(), R.raw.gameover).start();
 						}
 						hero.getVelocity().toggleYDirection();
 
@@ -447,15 +447,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 					{
 						if (coinList.get(i).getType() == Coin.COIN_TYPE_NORMAL)
 						{
-							if(ProjectUnknown.prefSounds.getBoolean("SOUNDS", false) == true) {
-								MediaPlayer.create(this.getContext(), R.raw.lame).start();
+							if (ProjectUnknown.prefMusic.getBoolean("SOUNDS", false) == true)
+							{
+								MediaPlayer.create(getContext(), R.raw.gameover).start();
 							}
 							score += 200;
 
 						} else if (coinList.get(i).getType() == Coin.COIN_TYPE_SPECIAL)
 						{
-							if(ProjectUnknown.prefSounds.getBoolean("SOUNDS", false) == true) {
-								MediaPlayer.create(this.getContext(), R.raw.lame).start();
+							if (ProjectUnknown.prefMusic.getBoolean("SOUNDS", false) == true)
+							{
+								MediaPlayer.create(getContext(), R.raw.gameover).start();
 							}
 							artifactFound = true;
 							artifactTime = System.currentTimeMillis();

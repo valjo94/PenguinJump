@@ -36,10 +36,8 @@ public class Game extends Activity
 		Bundle bundle = getIntent().getExtras();
 		theme = bundle.getInt("Theme");
 		
-
 		setContentView(new MainGamePanel(this, theme));
 		
-
 		// Native rate is 44.1kHz 16 bit stereo, but to save space we just use MPEG-3 22kHz mono
 		if (ProjectUnknown.prefMusic.getBoolean("MUSIC", false) == true)
 		{
